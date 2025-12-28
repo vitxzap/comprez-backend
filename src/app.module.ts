@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { validate } from '../config/env';
+import { validate } from 'config/env';
 import { PrismaModule } from './database/prisma/prisma.module';
 import { VideoModule } from './modules/video/video.module';
 
