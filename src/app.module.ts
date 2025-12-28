@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { validate } from 'env';
+import { validate } from '../config/env';
 import { PrismaModule } from './database/prisma/prisma.module';
 import { VideoModule } from './modules/video/video.module';
 
@@ -9,10 +9,10 @@ import { VideoModule } from './modules/video/video.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validate,
-      envFilePath: ".env "
+      envFilePath: '.env',
     }),
     PrismaModule,
-    VideoModule
+    VideoModule,
   ],
   controllers: [],
   providers: [],
