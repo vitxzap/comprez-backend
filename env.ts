@@ -2,10 +2,11 @@ import z from 'zod';
 import 'dotenv/config';
 const schema = z.object({
   PORT: z.coerce.number().min(1).default(3000),
+  DATABASE_URL: z.string().nonempty(),
 });
 
 // Used to type ConfigService
-type Env = z.infer<typeof schema>;
+export type TypedEnv = z.infer<typeof schema>;
 
 //
 export const env = schema.parse(process.env);
