@@ -25,10 +25,10 @@ export class VideoController {
   upload(
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addMaxSizeValidator({ maxSize: 250 * 1000 * 1000 })
+        .addMaxSizeValidator({ maxSize: 500 * 1000 * 1000 })
         .addFileTypeValidator({
           fileType: 'video/mp4',
-          skipMagicNumbersValidation: true,
+          skipMagicNumbersValidation: true, //I know this is not safe for now, but nest has a bug that makes this validation fail even the file has the correct magic numbers of the specified fileType
         })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
