@@ -1,13 +1,41 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  ParseFilePipeBuilder,
+  Post,
+  Query,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { VideoService } from './video.service';
-
+import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('video')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @Get('stream')
-  stream(@Query('id') id: string): Promise<string | void> | string | void {
+  stream(@Query('id') id: string) {
     const service = this.videoService.stream(id);
     return service;
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('video'))
+  upload(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addMaxSizeValidator({ maxSize: 250 * 1000 * 1000 })
+        .addFileTypeValidator({
+          fileType: 'video/mp4',
+          skipMagicNumbersValidation: true,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    video: Express.Multer.File,
+  ) {
+    return this.videoService.upload(video);
   }
 }
