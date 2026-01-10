@@ -3,6 +3,7 @@ import { VideoContract } from './video.contract';
 import { spawn } from 'child_process';
 import { stdout } from 'process';
 import { once } from 'events';
+import { fileCompression } from 'src/utils/video.compression';
 
 @Injectable()
 export class VideoRepository implements VideoContract {
@@ -14,21 +15,7 @@ export class VideoRepository implements VideoContract {
     return 'stream method';
   }
 
-  compress(video: Express.Multer.File): Promise<string | void> {
-    return new Promise((resolve, reject) => {
-      let response: string = '';
-      const ffmpeg = spawn('ffmpeg', ['-h']);
-      ffmpeg.stdout.on('data', (data) => {
-        response += data;
-      });
-
-      ffmpeg.on('close', (code) => {
-        if (code != 0) {
-          reject('erro');
-        } else {
-          resolve(response);
-        }
-      });
-    });
+  async compress(video: Express.Multer.File): Promise<string | void> {
+    return await fileCompression();
   }
 }
