@@ -5,10 +5,15 @@ import { VideoContract } from './video.contract';
 export class VideoService {
   constructor(private readonly videoContract: VideoContract) {}
   upload(video: Express.Multer.File): Promise<string | void> | string | void {
-    const filename = this.videoContract.upload(video)
+    const filename = this.videoContract.upload(video);
     return filename;
   }
   stream(videoId: string): Promise<string | void> | string {
     throw new Error('Method not implemented.');
+  }
+
+  compress() {
+    const t = this.videoContract.compress(); 
+    return t
   }
 }

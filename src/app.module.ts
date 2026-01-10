@@ -9,12 +9,12 @@ import { VideoModule } from './modules/video/video.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validate,
-      envFilePath: '.env',
+      envFilePath: '.env'
     }),
     PrismaModule,
-    VideoModule,
+    VideoModule
   ],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class AppModule {}

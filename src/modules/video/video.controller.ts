@@ -6,7 +6,7 @@ import {
   Post,
   Query,
   UploadedFile,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -21,21 +21,25 @@ export class VideoController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('video'))
+  @UseInterceptors(FileInterceptor('video', { dest: './uploads' }))
   upload(
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addMaxSizeValidator({ maxSize: 500 * 1000 * 1000 })
         .addFileTypeValidator({
           fileType: 'video/mp4',
-          skipMagicNumbersValidation: true, //I know this is not safe for now, but nest has a bug that makes this validation fail even the file has the correct magic numbers of the specified fileType
+          skipMagicNumbersValidation: true //I know this is not safe for now, but nest has a bug that makes this validation fail even the file has the correct magic numbers of the specified fileType
         })
-        .build({
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        }),
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY })
     )
-    video: Express.Multer.File,
+    video: Express.Multer.File
   ) {
     return this.videoService.upload(video);
+  }
+
+  @Get('test')
+  test() {
+    const t = this.videoService.compress();
+    return t;
   }
 }
