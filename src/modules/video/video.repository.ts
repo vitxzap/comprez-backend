@@ -14,11 +14,21 @@ export class VideoRepository implements VideoContract {
     return 'stream method';
   }
 
-  compress(video: Express.Multer.File): string | void {
-    let response: string = '';
-    const ffmpeg = spawn('ffmpeg', ['-h']);
-    ffmpeg.stdout.on('data', (data) => {
-      console.log(data.toString());
+  compress(video: Express.Multer.File): Promise<string | void> {
+    return new Promise((resolve, reject) => {
+      let response: string = '';
+      const ffmpeg = spawn('ffmpeg', ['-h']);
+      ffmpeg.stdout.on('data', (data) => {
+        response += data;
+      });
+
+      ffmpeg.on('close', (code) => {
+        if (code != 0) {
+          reject('erro');
+        } else {
+          resolve(response);
+        }
+      });
     });
   }
 }

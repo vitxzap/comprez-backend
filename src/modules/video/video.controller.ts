@@ -38,8 +38,8 @@ export class VideoController {
   }
 
   @Get('test')
-  test() {
-    const t = this.videoService.compress();
+  async test() {
+    const t = await this.videoService.compress();
     return t;
   }
 }

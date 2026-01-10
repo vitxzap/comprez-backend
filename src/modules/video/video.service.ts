@@ -12,8 +12,7 @@ export class VideoService {
     throw new Error('Method not implemented.');
   }
 
-  compress() {
-    const t = this.videoContract.compress(); 
-    return t
+  async compress() {
+    return await this.videoContract.compress();
   }
 }
