@@ -8,9 +8,7 @@ export const multerOptions: MulterModuleOptions = {
     filename: function (req, file, cb) {
       cb(
         null,
-        file.originalname.slice(0, 16) +
-          '-' +
-          Date.now() +
+        crypto.randomUUID() +
           file.originalname.slice(
             file.originalname.length - 4,
             file.originalname.length

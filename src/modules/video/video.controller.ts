@@ -15,15 +15,9 @@ import { multerOptions } from 'src/utils/multer.options';
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
-  @Get('stream')
-  stream(@Query('id') id: string) {
-    const service = this.videoService.stream(id);
-    return service;
-  }
-
-  @Post('upload')
+  @Post('compress')
   @UseInterceptors(FileInterceptor('video', multerOptions))
-  upload(
+  async compress(
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addMaxSizeValidator({ maxSize: 500 * 1000 * 1000 })
@@ -35,11 +29,6 @@ export class VideoController {
     )
     video: Express.Multer.File
   ) {
-    return this.videoService.upload(video);
-  }
-
-  @Get('test')
-  async test() {
-    return await this.videoService.compress();
+    return await this.videoService.compress(video);
   }
 }
