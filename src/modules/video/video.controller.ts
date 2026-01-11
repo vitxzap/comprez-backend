@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/utils/multer.options';
 @Controller('video')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
@@ -21,7 +22,7 @@ export class VideoController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('video', { dest: './uploads' }))
+  @UseInterceptors(FileInterceptor('video', multerOptions))
   upload(
     @UploadedFile(
       new ParseFilePipeBuilder()
