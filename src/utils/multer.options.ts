@@ -6,8 +6,7 @@ export const multerOptions: MulterModuleOptions = {
   storage: multer.diskStorage({
     destination: './uploads',
     filename: function (req, file, cb) {
-      const extension = file.mimetype.slice(6, file.mimetype.length);
-      cb(null, crypto.randomUUID() + extension);
+      cb(null, crypto.randomUUID());
     }
   })
 };

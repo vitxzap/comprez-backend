@@ -5,20 +5,22 @@ export function fileCompression(file: Express.Multer.File): Promise<string> {
     let payload: string = '';
     const absolutePath = process.cwd() + '\\' + file.path;
     console.log(absolutePath);
+    const videoExtension = `.${file.mimetype.slice(6)}`;
+    console.log(videoExtension);
     const ffmpeg = spawn('ffmpeg', [
       '-i',
       absolutePath,
       '-c:v',
       'libx264',
       '-crf',
-      '38',
+      '29',
       '-preset',
-      'ultrafast',
+      'fast',
       '-c:a',
       'aac',
       '-b:a',
       '86k',
-      absolutePath.slice(0, absolutePath.length - 4) + '_compressed.mp4'
+      absolutePath + '_compressed' + videoExtension
     ]);
     ffmpeg.stdout.on('data', (data) => (payload += data));
     ffmpeg.stderr.on('data', (data) => {
