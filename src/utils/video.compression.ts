@@ -4,9 +4,7 @@ export function fileCompression(file: Express.Multer.File): Promise<string> {
   return new Promise((resolve, reject) => {
     let payload: string = '';
     const absolutePath = process.cwd() + '\\' + file.path;
-    console.log(absolutePath);
     const videoExtension = `.${file.mimetype.slice(6)}`;
-    console.log(videoExtension);
     const ffmpeg = spawn('ffmpeg', [
       '-i',
       absolutePath,
@@ -31,7 +29,7 @@ export function fileCompression(file: Express.Multer.File): Promise<string> {
         reject(code);
       } else {
         console.log(`ffmpeg exiting with code ${code}`);
-        resolve(payload);
+        resolve("Video successfully compressed!");
       }
     });
   });
