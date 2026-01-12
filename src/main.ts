@@ -6,7 +6,15 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: false
+  });
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  });
+  //Pipes
+  app.useGlobalPipes(new ValidationPipe());
 
   //Swagger + Scalar set-up
   const config = new DocumentBuilder()
@@ -14,16 +22,29 @@ async function bootstrap() {
     .setDescription('Comprez video compressor api documentation')
     .setVersion('0.1')
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  const documentFactory = SwaggerModule.createDocument(app, config);
+
+  //using scalar to document the api
   app.use(
-    '/reference',
+    '/api/docs',
     apiReference({
-      content: documentFactory
+      sources: [
+        {
+          url: '/api/docs',
+          title: 'Comprez',
+          slug: 'comprez',
+          content: documentFactory,
+          default: true
+        },
+        {
+          url: '/api/auth/open-api/generate-schema',
+          title: 'Auth',
+          slug: 'auth'
+        }
+      ],
+      theme: 'kepler'
     })
   );
-
-  //Pipes
-  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(env.PORT);
 }
