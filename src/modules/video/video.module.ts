@@ -9,8 +9,8 @@ import { VideoController } from './video.controller';
     VideoService,
     {
       provide: VideoContract,
-      useClass: VideoRepository,
-    },
+      useClass: VideoRepository
+    }
   ],
   controllers: [VideoController]
 })
