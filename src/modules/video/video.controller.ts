@@ -8,17 +8,18 @@ import {
 } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/utils/multer.options';
+import { OptionalAuth } from '@thallesp/nestjs-better-auth';
+
+@OptionalAuth()
 @Controller('video')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @Post('compress')
-  @UseInterceptors(FileInterceptor('video', multerOptions))
+  @UseInterceptors(FileInterceptor('video'))
   async compress(
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addMaxSizeValidator({ maxSize: 500 * 1000 * 1000 })
         .addFileTypeValidator({
           fileType: 'video/mp4',
           skipMagicNumbersValidation: true //I know this is not safe for now, but nest has a bug that makes this validation fail even the file has the correct magic numbers of the specified fileType
@@ -27,6 +28,7 @@ export class VideoController {
     )
     video: Express.Multer.File
   ) {
+    console.log(video);
     return await this.videoService.compress(video);
   }
 }
