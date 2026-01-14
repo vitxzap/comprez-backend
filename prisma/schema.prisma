@@ -1,7 +1,7 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "../generated/prisma"
-  moduleFormat    = "cjs"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -19,9 +19,28 @@ model User {
   isAnonymous   Boolean?  @default(false)
   sessions      Session[]
   accounts      Account[]
+  videos        Video[]
 
   @@unique([email])
   @@map("user")
+}
+
+model Video {
+  id           String   @id
+  fieldname    String
+  originalname String
+  mimetype     String
+  encoding     String
+  size         Int
+  destination  String
+  filename     String
+  path         String
+  createdAt    DateTime @default(now())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("video")
 }
 
 model Session {

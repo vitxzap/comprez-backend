@@ -6,8 +6,8 @@ import { VideoModule } from './modules/video/video.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptions } from './utils/multer.options';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
-import { AUTH_CONFIG } from './auth/symbols';
-import { AuthConfigModule } from './auth/auth.config.module';
+import { AUTH_CONFIG } from './auth/config/symbols';
+import { AuthConfigModule } from './auth/config/auth.config.module';
 import { BetterAuthOptions } from 'better-auth';
 @Module({
   imports: [

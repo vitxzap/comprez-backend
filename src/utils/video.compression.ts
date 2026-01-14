@@ -29,7 +29,7 @@ export function fileCompression(file: Express.Multer.File): Promise<string> {
         reject(code);
       } else {
         console.log(`ffmpeg exiting with code ${code}`);
-        resolve("Video successfully compressed!");
+        resolve('Video successfully compressed!');
       }
     });
   });
