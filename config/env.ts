@@ -10,7 +10,8 @@ const createEnvSchema = z.object({
   POSTGRES_USER: z.string().nonempty(),
   BETTER_AUTH_SECRET: z.string().min(32).nonempty(),
   BETTER_AUTH_URL: z.url().nonempty(),
-  REDIS_PASSWORD: z.string().nonempty()
+  REDIS_PASSWORD: z.string().nonempty(),
+  REDIS_URL: z.string().nonempty()
 });
 
 //exports a parsed constant of process.env, it can be used all over the app

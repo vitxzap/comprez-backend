@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate } from 'config/env';
 import { PrismaModule } from './database/prisma/prisma.module';
 import { VideoModule } from './modules/video/video.module';
@@ -9,12 +9,17 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { AUTH_CONFIG } from './auth/config/symbols';
 import { AuthConfigModule } from './auth/config/auth.config.module';
 import { BetterAuthOptions } from 'better-auth';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CacheConfigService } from './database/cache/cache.configuration.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validate,
       envFilePath: '.env'
+    }),
+    CacheModule.registerAsync({
+      useClass: CacheConfigService
     }),
     AuthModule.forRootAsync({
       isGlobal: true,
