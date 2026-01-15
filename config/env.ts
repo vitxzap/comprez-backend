@@ -3,10 +3,11 @@ import 'dotenv/config';
 
 //Defines the env schema
 const createEnvSchema = z.object({
-  PORT: z.coerce.number().min(1).default(3000),
+  PORT: z.coerce.number().min(1).max(65536).default(3000),
   DATABASE_URL: z.string().nonempty(),
   POSTGRES_PASSWORD: z.string().nonempty(),
   POSTGRES_DB: z.string().nonempty(),
+  GLOBAL_PREFIX: z.string().nonempty().default('v1'),
   POSTGRES_USER: z.string().nonempty(),
   BETTER_AUTH_SECRET: z.string().min(32).nonempty(),
   BETTER_AUTH_URL: z.url().nonempty(),

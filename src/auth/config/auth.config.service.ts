@@ -19,7 +19,8 @@ export const AuthConfigService = {
       secret: configService.getOrThrow('BETTER_AUTH_SECRET'),
       database: prismaAdapter(prismaService, {
         provider: 'postgresql'
-      })
+      }),
+      basePath: `${configService.getOrThrow("GLOBAL_PREFIX")}/auth`
     });
   }
 };

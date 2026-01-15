@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false
   });
+  app.setGlobalPrefix(env.GLOBAL_PREFIX);
   app.use(helmet());
   app.enableCors({
     origin: 'http://localhost:3000',
