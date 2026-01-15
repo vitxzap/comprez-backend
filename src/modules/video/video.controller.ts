@@ -1,7 +1,5 @@
 import {
   Controller,
-  HttpStatus,
-  ParseFilePipeBuilder,
   Post,
   UploadedFile,
   UseInterceptors
@@ -9,6 +7,8 @@ import {
 import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { OptionalAuth } from '@thallesp/nestjs-better-auth';
+import { FileValidationPipe } from 'src/pipes/file.validation.pipe';
+import { validateVideoSchema } from 'src/models/video.model';
 
 @OptionalAuth()
 @Controller('video')
@@ -18,17 +18,9 @@ export class VideoController {
   @Post('compress')
   @UseInterceptors(FileInterceptor('video'))
   async compress(
-    @UploadedFile(
-      new ParseFilePipeBuilder()
-        .addFileTypeValidator({
-          fileType: 'video/mp4',
-          skipMagicNumbersValidation: true //I know this is not safe for now, but nest has a bug that makes this validation fail even the file has the correct magic numbers of the specified fileType
-        })
-        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY })
-    )
+    @UploadedFile(new FileValidationPipe(validateVideoSchema))
     video: Express.Multer.File
   ) {
-    console.log(video);
     return await this.videoService.compress(video);
   }
 }

@@ -4,7 +4,7 @@ import { VideoContract } from './video.contract';
 import { VideoRepository } from './video.repository';
 import { VideoController } from './video.controller';
 import { MulterModule } from '@nestjs/platform-express';
-import { MulterOptionsService } from 'src/modules/video/video.multer.options.service';
+import { VideoMulterOptionsService } from 'src/modules/video/video.multer.options.service';
 
 @Module({
   providers: [
@@ -16,7 +16,7 @@ import { MulterOptionsService } from 'src/modules/video/video.multer.options.ser
   ],
   imports: [
     MulterModule.registerAsync({
-      useClass: MulterOptionsService
+      useClass: VideoMulterOptionsService
     })
   ],
   controllers: [VideoController]

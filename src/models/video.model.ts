@@ -60,3 +60,39 @@ const createCompressionOptionsSchema = z.object({
  * @param preset - Decides the algorithm speed level. The higher the speed, lower quality the video compression will have.
  */
 export type CompressionOptions = z.infer<typeof createCompressionOptionsSchema>;
+
+/**
+ * This schema is used to parse the ext and mimetype of the file sent by the video controller upload endpoint.
+ * To validate another file types, simple create another schema following this example:
+ * { ext: string, mime: string }
+ */
+export const validateVideoSchema = z.union([
+  z.object({
+    ext: z.literal('mp4'),
+    mime: z.literal('video/mp4')
+  }),
+  z.object({
+    ext: z.literal('avi'),
+    mime: z.literal('video/x-msvideo')
+  }),
+  z.object({
+    ext: z.literal('mov'),
+    mime: z.literal('video/quicktime')
+  }),
+  z.object({
+    ext: z.literal('mkv'),
+    mime: z.literal('video/x-matroska')
+  }),
+  z.object({
+    ext: z.literal('ogg'),
+    mime: z.literal('video/ogg')
+  }),
+  z.object({
+    ext: z.literal('webm'),
+    mime: z.literal('video/webm')
+  }),
+  z.object({
+    ext: z.literal('x-ms-asf'),
+    mime: z.literal('video/wmv')
+  })
+]);
