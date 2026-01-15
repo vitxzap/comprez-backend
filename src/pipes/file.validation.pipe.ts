@@ -14,7 +14,7 @@ export class FileValidationPipe implements PipeTransform {
   constructor(private readonly schema: z.ZodType) {}
   async transform(value: Express.Multer.File, metadata: ArgumentMetadata) {
     if (!value) {
-      throw new BadRequestException('Video file is missing');
+      throw new BadRequestException('File is missing');
     }
     const absolutePath = process.cwd() + '/' + value.path;
     const unvalidatedFile = await fileTypeFromFile(absolutePath, {
