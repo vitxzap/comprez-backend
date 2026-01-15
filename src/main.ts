@@ -9,15 +9,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false
   });
-  app.setGlobalPrefix(env.GLOBAL_PREFIX);
-  app.use(helmet());
-  app.enableCors({
-    origin: 'http://localhost:3000',
-    credentials: true
-  });
-  //Pipes
-  app.useGlobalPipes(new ValidationPipe());
-
   //Swagger + Scalar set-up
   const config = new DocumentBuilder()
     .setTitle('Comprez documentation')
@@ -29,18 +20,18 @@ async function bootstrap() {
 
   //using scalar to document the api
   app.use(
-    '/api/docs',
+    '/v1/docs',
     apiReference({
       sources: [
         {
-          url: '/api/docs',
+          url: '/v1/docs',
           title: 'Comprez',
           slug: 'comprez',
           content: documentFactory,
           default: true
         },
         {
-          url: '/api/auth/open-api/generate-schema',
+          url: '/v1/auth/open-api/generate-schema',
           title: 'Auth',
           slug: 'auth'
         }
@@ -48,6 +39,15 @@ async function bootstrap() {
       theme: 'kepler'
     })
   );
+
+  //Pipes
+  app.useGlobalPipes(new ValidationPipe());
+  app.use(helmet());
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  });
+  app.setGlobalPrefix(env.GLOBAL_PREFIX);
 
   await app.listen(env.PORT);
 }
