@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsNumber, isPositive, IsString } from 'class-validator';
 import z from 'zod';
 
 const createCompressionOptionsSchema = z.object({

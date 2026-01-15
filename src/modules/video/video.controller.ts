@@ -14,12 +14,8 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCookieAuth,
-  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
-  ApiProperty,
-  ApiResponse,
-  ApiTags,
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';

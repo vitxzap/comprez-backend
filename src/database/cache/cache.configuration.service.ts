@@ -1,7 +1,6 @@
-import { Injectable, Module } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CacheModuleOptions,
-  CacheOptions,
   CacheOptionsFactory
 } from '@nestjs/cache-manager';
 import KeyvRedis from '@keyv/redis';
