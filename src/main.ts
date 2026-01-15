@@ -4,11 +4,12 @@ import { env } from 'config/env';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
-
+import helmet from "helmet"
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false
   });
+  app.use(helmet())
   app.enableCors({
     origin: 'http://localhost:3000',
     credentials: true
