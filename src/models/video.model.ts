@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsNumber, isPositive, IsString } from 'class-validator';
 import z from 'zod';
 
@@ -60,6 +61,15 @@ const createCompressionOptionsSchema = z.object({
  * @param preset - Decides the algorithm speed level. The higher the speed, lower quality the video compression will have.
  */
 export type CompressionOptions = z.infer<typeof createCompressionOptionsSchema>;
+
+export class VideoDto {
+  @ApiProperty({
+    type: 'string',
+    description:
+      'Up to 500MB, supports all video extensions: mp4, mkv, mov, webm, wmv, ogg and avi.'
+  })
+  file: Express.Multer.File;
+}
 
 /**
  * This schema is used to parse the ext and mimetype of the file sent by the video controller upload endpoint.

@@ -21,6 +21,7 @@ async function bootstrap() {
     .setTitle('Comprez documentation')
     .setDescription('Comprez video compressor api documentation')
     .setVersion('0.1')
+    .addCookieAuth('better-auth.session_token')
     .build();
   const documentFactory = SwaggerModule.createDocument(app, config);
 
