@@ -5,6 +5,8 @@ import { VideoRepository } from './video.repository';
 import { VideoController } from './video.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { VideoMulterOptionsService } from 'src/modules/video/video.multer.options.service';
+import { BullModule } from '@nestjs/bullmq';
+import { BullConfigService } from 'src/config/queue/bull.config.service';
 
 @Module({
   providers: [
@@ -15,6 +17,9 @@ import { VideoMulterOptionsService } from 'src/modules/video/video.multer.option
     }
   ],
   imports: [
+    BullModule.registerQueue({
+      name: 'video'
+    }),
     MulterModule.registerAsync({
       useClass: VideoMulterOptionsService
     })

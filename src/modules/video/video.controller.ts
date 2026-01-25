@@ -58,11 +58,11 @@ export class VideoController {
   @UseInterceptors(FileInterceptor('video'))
   async compress(
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
-    videoDto: VideoDto
+    file: VideoDto['file']
   ) {
-    await this.videoService.compress(videoDto.file);
+    await this.videoService.compress(file);
     return {
-      message: 'compressed!'
+      message: 'job added'
     };
   }
 }
