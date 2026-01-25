@@ -29,7 +29,6 @@ import { CacheConfigService } from './database/cache/cache.configuration.service
         };
       }
     }),
-
     PrismaModule,
     VideoModule
   ],
