@@ -12,12 +12,11 @@ import multer from 'multer';
 export class VideoMulterOptionsService implements MulterOptionsFactory {
   createMulterOptions(): MulterModuleOptions {
     return {
-      dest: './uploads',
       limits: {
         fileSize: 500 * 1024 * 1024
       },
       storage: multer.diskStorage({
-        destination: './uploads',
+        destination: './uncompressed_files',
         filename: function (req, file, cb) {
           cb(null, crypto.randomUUID());
         }

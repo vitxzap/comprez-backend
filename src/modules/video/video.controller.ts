@@ -8,7 +8,10 @@ import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { OptionalAuth } from '@thallesp/nestjs-better-auth';
 import { FileValidationPipe } from 'src/pipes/file.validation.pipe';
-import { validateVideoSchema, VideoDto } from 'src/models/video.model';
+import {
+  validateVideoSchema,
+  VideoDto
+} from 'src/modules/video/dtos/video.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -19,7 +22,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
-import { ErrorResponseDto } from 'src/models/response.model';
+import { ErrorResponseDto } from 'src/common/dtos/response.dto';
 
 @OptionalAuth()
 @ApiCookieAuth()
@@ -60,9 +63,12 @@ export class VideoController {
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
     file: VideoDto['file']
   ) {
-    await this.videoService.compress(file);
+    const jobId = await this.videoService.compressFile({
+      path: file.path,
+      size: file.size
+    });
     return {
-      message: 'job added'
+      jobId: jobId
     };
   }
 }
