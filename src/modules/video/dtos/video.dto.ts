@@ -75,7 +75,7 @@ export class VideoDto {
  * To validate another file types, simple create another schema following this example:
  * { ext: string, mime: string }
  */
-export const validateVideoSchema = z.union([
+export const validateVideoSchema = z.xor([
   z.object({
     ext: z.literal('mp4'),
     mime: z.literal('video/mp4')

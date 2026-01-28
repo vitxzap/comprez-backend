@@ -1,4 +1,4 @@
-import { FileToQueue } from 'src/common/interfaces/video.interface';
+import { FileToQueue } from 'src/common/types/index';
 export abstract class VideoContract {
-  abstract addFileToQueue(file: FileToQueue): Promise<string | undefined>;
+  abstract compressFile(file: FileToQueue): Promise<string | undefined>;
 }
