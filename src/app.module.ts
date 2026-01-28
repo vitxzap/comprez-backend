@@ -10,7 +10,7 @@ import { BetterAuthOptions } from 'better-auth';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheConfigService } from './database/cache/cache.config.service';
 import { BullModule } from '@nestjs/bullmq';
-import { BullConfigService } from './config/queue/bull.config.service';
+import { BullConfigService } from './config/bullmq/bull.config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({

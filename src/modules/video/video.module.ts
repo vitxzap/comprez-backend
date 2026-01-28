@@ -17,7 +17,10 @@ import { BullModule } from '@nestjs/bullmq';
   ],
   imports: [
     BullModule.registerQueue({
-      name: 'video'
+      name: 'video',
+      defaultJobOptions: {
+        removeOnComplete: true
+      }
     }),
     MulterModule.registerAsync({
       useClass: VideoMulterOptionsService

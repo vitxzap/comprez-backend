@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Post,
   UploadedFile,
@@ -23,6 +24,7 @@ import {
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
 import { ErrorResponseDto } from 'src/common/dtos/response.dto';
+
 
 @OptionalAuth()
 @ApiCookieAuth()
@@ -61,11 +63,14 @@ export class VideoController {
   @UseInterceptors(FileInterceptor('video'))
   async compress(
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
-    file: VideoDto['file']
+    file: VideoDto['file'],
+    //extracts the unique id created by multer
+    @Body() body: { id: string }
   ) {
     const jobId = await this.videoService.compressFile({
       path: file.path,
-      size: file.size
+      size: file.size,
+      id: body.id
     });
     return {
       jobId: jobId

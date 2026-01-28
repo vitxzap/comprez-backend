@@ -12,11 +12,11 @@ import z from 'zod';
 @Injectable()
 export class FileValidationPipe implements PipeTransform {
   constructor(private readonly schema: z.ZodType) {}
-  async transform(value: Express.Multer.File, metadata: ArgumentMetadata) {
-    if (!value) {
+  async transform(file: Express.Multer.File, metadata: ArgumentMetadata) {
+    if (!file) {
       throw new BadRequestException('File is missing');
     }
-    const absolutePath = process.cwd() + '/' + value.path;
+    const absolutePath = process.cwd() + '/' + file.path;
     const unvalidatedFile = await fileTypeFromFile(absolutePath, {
       customDetectors: [detectAv]
     });
@@ -25,6 +25,6 @@ export class FileValidationPipe implements PipeTransform {
       await fs.unlink(absolutePath);
       throw new UnprocessableEntityException('Incorrect file type');
     }
-    return value;
+    return file;
   }
 }
