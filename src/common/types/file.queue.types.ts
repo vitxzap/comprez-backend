@@ -1,4 +1,4 @@
-import z, { size } from 'zod';
+import z from 'zod';
 
 /**
  * This schema defines the values that will be added to the job.
