@@ -11,12 +11,16 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { CacheConfigService } from './database/cache/cache.config.service';
 import { BullModule } from '@nestjs/bullmq';
 import { BullConfigService } from './config/bullmq/bull.config.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validate,
       envFilePath: '.env'
+    }),
+    EventEmitterModule.forRoot({
+      global: true
     }),
     CacheModule.registerAsync({
       useClass: CacheConfigService

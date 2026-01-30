@@ -7,7 +7,8 @@ import z from 'zod';
 export const fileToQueueSchema = z.object({
   size: z.number(),
   path: z.string(),
-  id: z.uuidv7()
+  jobId: z.uuidv7(),
+  userId: z.uuidv4()
 });
 
 /**
@@ -16,9 +17,9 @@ export const fileToQueueSchema = z.object({
  */
 export const fileJobDataSchema = fileToQueueSchema
   .extend({})
-  .omit({ id: true });
+  .omit({ jobId: true });
 
 /**
  * Defines all the possible job names
  */
-  export const fileJobNamesSchema = z.enum(['compress', 'convert']);
+export const fileJobNamesSchema = z.enum(['compress']);

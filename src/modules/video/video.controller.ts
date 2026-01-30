@@ -1,13 +1,22 @@
 import {
   Body,
   Controller,
+  Logger,
+  MessageEvent,
+  Param,
   Post,
+  Sse,
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { OptionalAuth } from '@thallesp/nestjs-better-auth';
+import {
+  OptionalAuth,
+  Session,
+  type UserSession
+} from '@thallesp/nestjs-better-auth';
 import { FileValidationPipe } from 'src/pipes/file.validation.pipe';
 import {
   validateVideoSchema,
@@ -24,15 +33,25 @@ import {
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
 import { ErrorResponseDto } from 'src/common/dtos/response.dto';
-
-
+import {
+  fromEvent,
+  interval,
+  map,
+  merge,
+  Observable,
+  tap,
+  timestamp
+} from 'rxjs';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 @OptionalAuth()
 @ApiCookieAuth()
 @Controller('video')
 export class VideoController {
-  constructor(private readonly videoService: VideoService) {}
+  constructor(
+    private readonly videoService: VideoService,
+    private eventEmiiter: EventEmitter2
+  ) {}
 
-  @Post('compress')
   @ApiOkResponse({
     example: { message: 'compressed!' },
     description: 'OK. Video compressed successfully!'
@@ -60,20 +79,36 @@ export class VideoController {
     description: 'Provide your file via multipart/form-data.',
     type: VideoDto
   })
+  @Post('compress')
   @UseInterceptors(FileInterceptor('video'))
   async compress(
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
     file: VideoDto['file'],
     //extracts the unique id created by multer
-    @Body() body: { id: string }
+    @Body() body: { pathId: string },
+    @Session() session: UserSession
   ) {
+    // Not safe. just for testing purposes
+    let id: string = '';
+    if (!session) {
+      id = uuidv4();
+    }
+
     const jobId = await this.videoService.compressFile({
       path: file.path,
       size: file.size,
-      id: body.id
+      jobId: body.pathId,
+      userId: id
     });
     return {
       jobId: jobId
     };
+  }
+
+  @Sse('status')
+  async getJobStatus(): Promise<Observable<MessageEvent>> {
+    return fromEvent(this.eventEmiiter, 'job.progress').pipe(
+      map((data) => ({ data }) as MessageEvent)
+    );
   }
 }

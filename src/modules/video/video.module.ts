@@ -6,10 +6,12 @@ import { VideoController } from './video.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { VideoMulterOptionsService } from 'src/config/multer/video.multer.config.service';
 import { BullModule } from '@nestjs/bullmq';
+import { VideoProcessor } from './video.processor';
 
 @Module({
   providers: [
     VideoService,
+    VideoProcessor,
     {
       provide: VideoContract,
       useClass: VideoRepository
