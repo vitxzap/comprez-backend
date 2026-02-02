@@ -1,3 +1,4 @@
+import { JobProgress } from 'bullmq';
 import z from 'zod';
 
 /**
@@ -23,3 +24,4 @@ export const fileJobDataSchema = fileToQueueSchema
  * Defines all the possible job names
  */
 export const fileJobNamesSchema = z.enum(['compress']);
+

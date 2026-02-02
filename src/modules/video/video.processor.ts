@@ -10,14 +10,14 @@ export class VideoProcessor extends WorkerHost {
   }
   async process(job: Job<any, any, string>): Promise<any> {
     await job.updateProgress(10);
-    
-    return {};
+    return { success: true };
   }
 
   @OnWorkerEvent('progress')
   onProgress(job: Job<FileJobData>) {
-    this.eventEmitter.emit('job.progress', {
-      progress: job.progress
+    this.eventEmitter.emit(`job.${job.id}.progress`, {
+      progress: job.progress,
+      path: job.data.path
     });
   }
 }

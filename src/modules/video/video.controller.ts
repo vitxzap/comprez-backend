@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Logger,
@@ -88,7 +89,7 @@ export class VideoController {
     @Body() body: { pathId: string },
     @Session() session: UserSession
   ) {
-    // Not safe. just for testing purposes
+    // This is not safe. just for testing purposes
     let id: string = '';
     if (!session) {
       id = uuidv4();
@@ -105,10 +106,21 @@ export class VideoController {
     };
   }
 
-  @Sse('status')
-  async getJobStatus(): Promise<Observable<MessageEvent>> {
-    return fromEvent(this.eventEmiiter, 'job.progress').pipe(
-      map((data) => ({ data }) as MessageEvent)
+  @Sse('status/:id')
+  async getJobStatus(
+    @Param('id') jobId: string
+  ): Promise<Observable<MessageEvent>> {
+    const progress = fromEvent(this.eventEmiiter, `job.${jobId}.progress`).pipe(
+      map((data: any) => ({ data }))
     );
+    progress.subscribe({
+      next({ data }) {
+        Logger.log(
+          `Sse event sent with data: ${JSON.stringify(data)}`,
+          'SSE:EVENT'
+        );
+      }
+    });
+    return progress;
   }
 }

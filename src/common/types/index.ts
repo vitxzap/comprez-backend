@@ -2,7 +2,7 @@ import z from 'zod';
 import {
   fileJobDataSchema,
   fileJobNamesSchema,
-  fileToQueueSchema
+  fileToQueueSchema,
 } from './file.queue.types';
 
 export type FileToQueue = z.infer<typeof fileToQueueSchema>;
