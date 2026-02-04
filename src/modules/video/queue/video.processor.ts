@@ -1,6 +1,6 @@
 import { SandboxedJob } from "bullmq"
 import { FileJobData } from "src/common/types"
-import { CompressionLevel, CompressionOptions } from "../dtos/video.dto";
+import { CompressionLevel } from "../dtos/video.dto";
 import { spawn } from "child_process";
 
 export default async function (job: SandboxedJob<FileJobData>): Promise<{ success: boolean }> {
