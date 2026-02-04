@@ -4,7 +4,7 @@ import { CompressionLevel, CompressionOptions } from "../dtos/video.dto";
 import { spawn } from "child_process";
 
 export default async function (job: SandboxedJob<FileJobData>): Promise<{ success: boolean }> {
-    await job.updateProgress({ progress: 10, path: job.data.path })
+    await job.updateProgress({ progress: 20, path: job.data.path })
     return {
         success: true
     }

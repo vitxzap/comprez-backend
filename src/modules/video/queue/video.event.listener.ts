@@ -24,16 +24,19 @@ export class VideoEventListener extends QueueEventsHost {
       added: true,
       processor: job.name
     });
-    this.logger.log(`JobId: ${job.jobId} added to the queue`)
+    this.logger.debug(`JobId: ${job.jobId} added to the queue`)
   }
 
   @OnQueueEvent('progress')
-  onProgress(job: Job<ProgressData>) {
-    this.logger.log(job.data.progress)
+  onProgress(job: {jobId: string, data: {progress: object}}) {
+    this.logger.debug(`JobId: ${job.jobId} was update with progress: ${job.data.progress}`)
+    this.eventEmitter.emit(`job.${job.jobId}.progress`, {
+      ...job.data
+    })
   }
 
   @OnQueueEvent('completed')
-  onCompleted(job: Job<any, CompletedReturnType>) {
-    this.logger.log(JSON.stringify(job))
+  onCompleted(job: any) {
+    this.logger.debug(`JobId: ${job.jobId} completed successfully!`)
   }
 }

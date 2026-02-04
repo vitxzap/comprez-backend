@@ -77,7 +77,7 @@ export class VideoController {
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
     file: VideoDto['file'],
     //extracts the unique id created by multer
-    @Body() body: { id: string },
+    @Body() body: { idd: string },
     @Session() session: UserSession
   ) {
     // This is not safe. just for testing purposes
@@ -89,7 +89,7 @@ export class VideoController {
     const jobId = await this.videoService.compressFile({
       path: file.path,
       size: file.size,
-      jobId: body.id,
+      jobId: body.idd,
       userId: id
     });
     return {
