@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Logger,
@@ -34,15 +33,7 @@ import {
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
 import { ErrorResponseDto } from 'src/common/dtos/response.dto';
-import {
-  fromEvent,
-  interval,
-  map,
-  merge,
-  Observable,
-  tap,
-  timestamp
-} from 'rxjs';
+import { fromEvent, map, Observable } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 @OptionalAuth()
 @ApiCookieAuth()
@@ -51,7 +42,7 @@ export class VideoController {
   constructor(
     private readonly videoService: VideoService,
     private eventEmiiter: EventEmitter2
-  ) {}
+  ) { }
 
   @ApiOkResponse({
     example: { message: 'compressed!' },
@@ -86,7 +77,7 @@ export class VideoController {
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
     file: VideoDto['file'],
     //extracts the unique id created by multer
-    @Body() body: { pathId: string },
+    @Body() body: { id: string },
     @Session() session: UserSession
   ) {
     // This is not safe. just for testing purposes
@@ -98,7 +89,7 @@ export class VideoController {
     const jobId = await this.videoService.compressFile({
       path: file.path,
       size: file.size,
-      jobId: body.pathId,
+      jobId: body.id,
       userId: id
     });
     return {
@@ -110,17 +101,17 @@ export class VideoController {
   async getJobStatus(
     @Param('id') jobId: string
   ): Promise<Observable<MessageEvent>> {
-    const progress = fromEvent(this.eventEmiiter, `job.${jobId}.progress`).pipe(
+    const added = fromEvent(this.eventEmiiter, `job.${jobId}.added`).pipe(
       map((data: any) => ({ data }))
     );
-    progress.subscribe({
+    added.subscribe({
       next({ data }) {
         Logger.log(
-          `Sse event sent with data: ${JSON.stringify(data)}`,
-          'SSE:EVENT'
+          `Sse event sent: ${JSON.stringify(data)}`,
+          VideoController.name
         );
       }
     });
-    return progress;
+    return added;
   }
 }

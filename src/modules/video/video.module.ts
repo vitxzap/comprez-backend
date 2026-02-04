@@ -6,12 +6,14 @@ import { VideoController } from './video.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { VideoMulterOptionsService } from 'src/config/multer/video.multer.config.service';
 import { BullModule } from '@nestjs/bullmq';
-import { VideoProcessor } from './video.processor';
+import { VideoEventListener } from './queue/video.event.listener';
+import { join } from 'path';
+import { pathToFileURL } from 'url';
 
 @Module({
   providers: [
     VideoService,
-    VideoProcessor,
+    VideoEventListener,
     {
       provide: VideoContract,
       useClass: VideoRepository
@@ -20,6 +22,11 @@ import { VideoProcessor } from './video.processor';
   imports: [
     BullModule.registerQueue({
       name: 'video',
+      processors: [{
+        name: "compress",
+        path: pathToFileURL(__dirname + "/queue/video.processor.js"),
+        concurrency: 2
+      }],
       defaultJobOptions: {
         removeOnComplete: true
       }
@@ -30,4 +37,4 @@ import { VideoProcessor } from './video.processor';
   ],
   controllers: [VideoController]
 })
-export class VideoModule {}
+export class VideoModule { }

@@ -61,6 +61,9 @@ const createCompressionOptionsSchema = z.object({
  */
 export type CompressionOptions = z.infer<typeof createCompressionOptionsSchema>;
 
+const createCompressionlevel = z.enum(["low", "medium", "high"])
+export type CompressionLevel = z.infer<typeof createCompressionlevel> 
+
 export class VideoDto {
   @ApiProperty({
     type: 'string',

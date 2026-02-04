@@ -21,7 +21,6 @@ export class VideoMulterOptionsService implements MulterOptionsFactory {
       storage: multer.diskStorage({
         destination: (req, file, cb) => {
           const id = uuidv7();
-
           // Pass the unique folder id to the request so the controller can catch it
           req.body = {
             id: id
