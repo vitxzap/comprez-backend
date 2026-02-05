@@ -5,9 +5,8 @@ import {
 } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Job } from 'bullmq';
-import { CompletedReturnType, ProgressData } from '../dtos/job.dto';
 
+//Emits and logs video queue events so they can be used by the SSE and other parts of the application
 @QueueEventsListener('video')
 export class VideoEventListener extends QueueEventsHost {
   private logger = new Logger(VideoEventListener.name);

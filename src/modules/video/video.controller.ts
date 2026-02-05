@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Logger,
   MessageEvent,
   Param,
   Post,
@@ -99,6 +98,8 @@ export class VideoController {
     };
   }
 
+
+  //Transmits server-side events to the client based on the jobId
   @Sse('status/:id')
   async getJobStatus(
     @Param('id') jobId: string

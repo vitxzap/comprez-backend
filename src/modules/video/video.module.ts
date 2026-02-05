@@ -7,7 +7,6 @@ import { MulterModule } from '@nestjs/platform-express';
 import { VideoMulterOptionsService } from 'src/config/multer/video.multer.config.service';
 import { BullModule } from '@nestjs/bullmq';
 import { VideoEventListener } from './queue/video.event.listener';
-import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { PrismaModule } from 'src/database/prisma/prisma.module';
 

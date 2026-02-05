@@ -15,6 +15,7 @@ export class VideoRepository implements VideoContract {
   ) { }
 
 
+  // Send the file to the compression queue, so the worker can process it
   async compressFile(data: FileToQueue): Promise<string | undefined> {
     const job = await this.videoQueue.add(
       'compress',
@@ -31,6 +32,8 @@ export class VideoRepository implements VideoContract {
     return job.id;
   }
 
+
+  //Save the compression metadata to the database.
   async saveCompressionData(file: Video): Promise<void> {
     this.prismaService.video.create({
       data: {

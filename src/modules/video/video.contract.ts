@@ -1,4 +1,3 @@
-import { Job } from 'bullmq';
 import { Video } from 'generated/prisma/client';
 import { FileToQueue } from 'src/common/types/index';
 export abstract class VideoContract {

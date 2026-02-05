@@ -9,6 +9,7 @@ export default async function (job: SandboxedJob): Promise<{ success: boolean }>
     }
 }
 
+// generates all the arguments to the ffmpeg process
 function buildCompressionArgs(input: string, output: string, compressionLevel: CompressionLevel) {
     const presets = {
         low: ['-crf', '28', '-preset', 'faster'],
@@ -27,6 +28,8 @@ function buildCompressionArgs(input: string, output: string, compressionLevel: C
     ]
     return args;
 }
+
+// Actually runs the ffmpeg process (heavy cpu)
 function compress(args: string[]) {
     return new Promise((resolve, reject) => {
         const ffmpeg = spawn("ffmpeg", args);
