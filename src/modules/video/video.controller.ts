@@ -9,7 +9,7 @@ import {
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { v7 as uuidv7 } from 'uuid';
 import { VideoService } from './video.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -33,8 +33,9 @@ import {
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
 import { ErrorResponseDto } from 'src/common/dtos/response.dto';
-import { fromEvent, map, Observable } from 'rxjs';
+import { fromEvent, map, merge, Observable } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { extname } from 'path';
 @OptionalAuth()
 @ApiCookieAuth()
 @Controller('video')
@@ -77,20 +78,21 @@ export class VideoController {
     @UploadedFile(new FileValidationPipe(validateVideoSchema))
     file: VideoDto['file'],
     //extracts the unique id created by multer
-    @Body() body: { idd: string },
+    @Body() body: { id: string },
     @Session() session: UserSession
   ) {
     // This is not safe. just for testing purposes
-    let id: string = '';
+    let userId: string = '';
     if (!session) {
-      id = uuidv4();
+      userId = uuidv7();
     }
 
     const jobId = await this.videoService.compressFile({
-      path: file.path,
-      size: file.size,
-      jobId: body.idd,
-      userId: id
+      originalSize: file.size,
+      jobId: body.id,
+      originalName: file.originalname,
+      userId: userId,
+      ext: extname(file.path)
     });
     return {
       jobId: jobId
@@ -101,17 +103,21 @@ export class VideoController {
   async getJobStatus(
     @Param('id') jobId: string
   ): Promise<Observable<MessageEvent>> {
-    const added = fromEvent(this.eventEmiiter, `job.${jobId}.added`).pipe(
-      map((data: any) => ({ data }))
+    const addedEvent = fromEvent(this.eventEmiiter, `job.${jobId}.added`).pipe(
+      map(
+        (data: any) => ({ data })
+      )
     );
-    added.subscribe({
-      next({ data }) {
-        Logger.log(
-          `Sse event sent: ${JSON.stringify(data)}`,
-          VideoController.name
-        );
-      }
-    });
-    return added;
+    const progressEvent = fromEvent(this.eventEmiiter, `job.${jobId}.progress`).pipe(
+      map(
+        (data: any) => ({ data })
+      )
+    );
+    const completedEvent = fromEvent(this.eventEmiiter, `job.${jobId}.completed`).pipe(
+      map(
+        (data: any) => ({ data })
+      )
+    )
+    return merge(progressEvent, addedEvent, completedEvent);
   }
 }

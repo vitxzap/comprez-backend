@@ -3,12 +3,15 @@ import { VideoContract } from './video.contract';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { FileJobData, FileJobNames, FileToQueue } from 'src/common/types/index';
+import { PrismaService } from 'src/database/prisma/prisma.service';
+import { Video } from 'generated/prisma/client';
 
 @Injectable()
 export class VideoRepository implements VideoContract {
   constructor(
     @InjectQueue('video')
-    private videoQueue: Queue<FileJobData, any, FileJobNames>
+    private videoQueue: Queue<FileJobData, any, FileJobNames>,
+    private readonly prismaService: PrismaService
   ) { }
 
 
@@ -16,14 +19,29 @@ export class VideoRepository implements VideoContract {
     const job = await this.videoQueue.add(
       'compress',
       {
-        path: data.path,
-        size: data.size,
-        userId: data.userId
+        userId: data.userId,
+        ext: data.ext,
+        originalName: data.originalName,
+        originalSize: data.originalSize
       },
       {
         jobId: data.jobId
       }
     );
     return job.id;
+  }
+
+  async saveCompressionData(file: Video): Promise<void> {
+    this.prismaService.video.create({
+      data: {
+        originalname: file.originalname,
+        userId: file.userId,
+        destination: file.destination,
+        ext: file.ext,
+        preset: file.preset,
+        originalSize: file.originalSize,
+        compressedSize: file.compressedSize,
+      }
+    })
   }
 }

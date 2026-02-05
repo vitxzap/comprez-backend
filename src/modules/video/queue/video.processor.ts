@@ -1,15 +1,13 @@
 import { SandboxedJob } from "bullmq"
-import { FileJobData } from "src/common/types"
 import { CompressionLevel } from "../dtos/video.dto";
 import { spawn } from "child_process";
 
-export default async function (job: SandboxedJob<FileJobData>): Promise<{ success: boolean }> {
+export default async function (job: SandboxedJob): Promise<{ success: boolean }> {
     await job.updateProgress({ progress: 20, path: job.data.path })
     return {
         success: true
     }
 }
-
 
 function buildCompressionArgs(input: string, output: string, compressionLevel: CompressionLevel) {
     const presets = {

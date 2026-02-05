@@ -62,7 +62,7 @@ const createCompressionOptionsSchema = z.object({
 export type CompressionOptions = z.infer<typeof createCompressionOptionsSchema>;
 
 const createCompressionlevel = z.enum(["low", "medium", "high"])
-export type CompressionLevel = z.infer<typeof createCompressionlevel> 
+export type CompressionLevel = z.infer<typeof createCompressionlevel>
 
 export class VideoDto {
   @ApiProperty({
@@ -84,18 +84,6 @@ export const validateVideoSchema = z.xor([
     mime: z.literal('video/mp4')
   }),
   z.object({
-    ext: z.literal('avi'),
-    mime: z.literal('video/x-msvideo')
-  }),
-  z.object({
-    ext: z.literal('mov'),
-    mime: z.literal('video/quicktime')
-  }),
-  z.object({
-    ext: z.literal('mkv'),
-    mime: z.literal('video/x-matroska')
-  }),
-  z.object({
     ext: z.literal('ogg'),
     mime: z.literal('video/ogg')
   }),
@@ -103,8 +91,4 @@ export const validateVideoSchema = z.xor([
     ext: z.literal('webm'),
     mime: z.literal('video/webm')
   }),
-  z.object({
-    ext: z.literal('x-ms-asf'),
-    mime: z.literal('video/wmv')
-  })
 ]);

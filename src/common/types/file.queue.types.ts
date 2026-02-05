@@ -1,4 +1,5 @@
 import { JobProgress } from 'bullmq';
+import { Video } from 'generated/prisma/client';
 import z from 'zod';
 
 /**
@@ -6,19 +7,18 @@ import z from 'zod';
  * The Id field defines the jobId as the same used by multer to generates the unique file folder.
  */
 export const fileToQueueSchema = z.object({
-  size: z.number(),
-  path: z.string(),
+  originalSize: z.number().positive(),
+  originalName: z.string(),
+  ext: z.string(),
   jobId: z.uuidv7(),
-  userId: z.uuidv4()
+  userId: z.uuidv7(),
 });
 
 /**
  * Defines the Job data type, omitting the id from FileToQueue, as id is not included in job data.
  * Add more data about the file if needed, just write them down.
  */
-export const fileJobDataSchema = fileToQueueSchema
-  .extend({})
-  .omit({ jobId: true });
+export const fileJobDataSchema = fileToQueueSchema.extend({}).omit({ jobId: true })
 
 /**
  * Defines all the possible job names

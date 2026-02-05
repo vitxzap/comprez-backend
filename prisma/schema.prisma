@@ -26,18 +26,16 @@ model User {
 }
 
 model Video {
-  id           String   @id
-  fieldname    String
-  originalname String
-  mimetype     String
-  encoding     String
-  size         Int
-  destination  String
-  filename     String
-  path         String
-  createdAt    DateTime @default(now())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id              String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  originalname    String
+  ext             String
+  preset          String
+  compressedSize  Int
+  originalSize    Int
+  destination     String
+  createdAt       DateTime @default(now())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("video")

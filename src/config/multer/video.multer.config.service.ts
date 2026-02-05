@@ -23,7 +23,7 @@ export class VideoMulterOptionsService implements MulterOptionsFactory {
           const id = uuidv7();
           // Pass the unique folder id to the request so the controller can catch it
           req.body = {
-            id: id
+            jobId: id
           };
 
           // generates the path of the folder

@@ -14,7 +14,6 @@ export class VideoEventListener extends QueueEventsHost {
   constructor(private eventEmitter: EventEmitter2) {
     super();
   }
-
   /**
    * Emits an event every time a new job is added to the queue
    */
@@ -28,15 +27,18 @@ export class VideoEventListener extends QueueEventsHost {
   }
 
   @OnQueueEvent('progress')
-  onProgress(job: {jobId: string, data: {progress: object}}) {
-    this.logger.debug(`JobId: ${job.jobId} was update with progress: ${job.data.progress}`)
+  onProgress(job: { jobId: string, data: { progress: object } }) {
     this.eventEmitter.emit(`job.${job.jobId}.progress`, {
       ...job.data
     })
+    this.logger.debug(`JobId: ${job.jobId} was update with progress: ${job.data.progress}`)
   }
 
   @OnQueueEvent('completed')
-  onCompleted(job: any) {
+  onCompleted(job: { jobId: string, returnvalue: object, prev: string }) {
+    this.eventEmitter.emit(`job.${job.jobId}.completed`, {
+      ...job.returnvalue
+    })
     this.logger.debug(`JobId: ${job.jobId} completed successfully!`)
   }
 }
