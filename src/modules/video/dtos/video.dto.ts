@@ -79,14 +79,31 @@ export class VideoDto {
  * { ext: string, mime: string }
  */
 export const validateVideoSchema = z.xor([
+  //mp4 video format
   z.object({
     ext: z.literal('mp4'),
     mime: z.literal('video/mp4')
   }),
+
+  //ogg video format
   z.object({
     ext: z.literal('ogg'),
     mime: z.literal('video/ogg')
   }),
+
+  //avi video format
+  z.object({
+    ext: z.literal('avi'),
+    mime: z.literal('video/vnd.avi')
+  }),
+
+  //wmv video format
+  z.object({
+    ext: z.literal('asf'),
+    mime: z.literal('video/x-ms-asf')
+  }),
+
+  //webm video format
   z.object({
     ext: z.literal('webm'),
     mime: z.literal('video/webm')
