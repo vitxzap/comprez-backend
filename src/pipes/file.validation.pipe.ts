@@ -18,15 +18,13 @@ export class FileValidationPipe implements PipeTransform {
       throw new BadRequestException('File is missing');
     }
     const absolutePath = process.cwd() + `\\` + file.path;
-    const fileDirname = dirname(file.path)
-
+    const fileDirname = dirname(file.path);
 
     const unvalidatedFile = await fileTypeFromFile(absolutePath, {
       customDetectors: [detectAv]
     });
-    console.log(unvalidatedFile);
     const isValid = this.schema.safeParse(unvalidatedFile).success;
-    
+
     //If the file is not in the schema, the file is removed with the directory
     if (!isValid) {
 
@@ -35,7 +33,7 @@ export class FileValidationPipe implements PipeTransform {
 
       // Removes the directory
       await fs.rmdir(fileDirname)
-      
+
       throw new UnprocessableEntityException('Incorrect file type');
     }
     return file;
