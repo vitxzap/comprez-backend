@@ -1,11 +1,20 @@
 import { SandboxedJob } from "bullmq"
 import { CompressionLevel } from "../dtos/video.dto";
 import { spawn } from "child_process";
+import { FileJobData } from "src/common/types";
+import { JobReturnValues } from "../dtos/job.dto";
 
-export default async function (job: SandboxedJob): Promise<{ success: boolean }> {
-    await job.updateProgress({ progress: 20, path: job.data.path })
+export default async function (job: SandboxedJob<FileJobData>): Promise<JobReturnValues> {
+    await job.updateProgress({ porcentage: 20, originalName: job.data.originalName })
+
     return {
-        success: true
+        success: true,
+        data: {
+            //Simulating data
+            compressedSize: Number((Math.random() * 100).toFixed(2)),
+            destination: "url.com",
+            preset: "low"
+        }
     }
 }
 
