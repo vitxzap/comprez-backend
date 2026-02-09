@@ -11,6 +11,7 @@ import {
 import { CompressorService } from './compressor.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
+  AllowAnonymous,
   Session,
   type UserSession
 } from '@thallesp/nestjs-better-auth';
@@ -93,6 +94,7 @@ export class CompressorController {
 
   //Transmits server-side events to the client based on the jobId
   @Sse('status/:id')
+  @AllowAnonymous()
   async getJobStatus(
     @Param('id') jobId: string
   ): Promise<Observable<MessageEvent>> {
