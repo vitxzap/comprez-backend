@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { JobData, JobNames, QueueParams } from './types/queue.types';
+import { JobData, JobNames, JobReturnValues, QueueParams } from './types/queue.types';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { Video } from 'generated/prisma/client';
+
 
 @Injectable()
 export class CompressorRepository implements CompressorContract {
@@ -34,10 +34,10 @@ export class CompressorRepository implements CompressorContract {
 
 
   //Save the compression metadata to the database.
-  async saveCompressionData(file: Video): Promise<void> {
-    this.prismaService.video.create({
+  async saveCompressionData(file: JobReturnValues["data"]): Promise<void> {
+    await this.prismaService.video.create({
       data: {
-        originalname: file.originalname,
+        originalName: file.originalName,
         userId: file.userId,
         destination: file.destination,
         ext: file.ext,

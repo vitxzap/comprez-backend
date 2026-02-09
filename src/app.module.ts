@@ -20,7 +20,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       envFilePath: '.env'
     }),
     EventEmitterModule.forRoot({
-      global: true
+      global: true,
+      wildcard: true,
     }),
     CacheModule.registerAsync({
       useClass: CacheConfigService
@@ -44,4 +45,4 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   controllers: [],
   providers: []
 })
-export class AppModule {}
+export class AppModule { }

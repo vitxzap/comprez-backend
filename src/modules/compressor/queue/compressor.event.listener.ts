@@ -39,6 +39,6 @@ export class CompressorEventListener extends QueueEventsHost {
     this.eventEmitter.emit(`job.${job.jobId}.completed`, {
       ...job.returnvalue
     })
-    this.logger.debug(`JobId: ${job.jobId} completed successfully! Compressed size: ${job.returnvalue.data.compressedSize}MB`)
+    this.logger.debug(`JobId: ${job.jobId} completed successfully! Compressed size: ${job.returnvalue.data.compressedSize} Bytes`)
   }
 }

@@ -26,11 +26,11 @@ const jobNamesSchema = z.enum(['compress']);
 
 export const jobReturnValuesSchema = z.object({
   success: z.boolean(),
-  data: z.object({
+  data: queueParams.extend({
     compressedSize: z.number(),
     destination: z.url(),
     preset: z.custom<CompressionLevel>()
-  })
+  }).omit({ jobId: true })
 })
 
 export type QueueParams = z.infer<typeof queueParams>;

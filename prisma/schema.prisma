@@ -27,7 +27,7 @@ model User {
 
 model Video {
   id              String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
-  originalname    String
+  originalName    String
   ext             String
   preset          String
   compressedSize  Int

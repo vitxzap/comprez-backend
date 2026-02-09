@@ -11,9 +11,13 @@ export default async function (job: SandboxedJob<JobData>): Promise<JobReturnVal
         success: true,
         data: {
             //Simulating data
-            compressedSize: Number((Math.random() * 100).toFixed(2)),
+            originalName: job.data.originalName,
+            userId: job.data.userId,
             destination: "url.com",
-            preset: "low"
+            ext: job.data.ext,
+            preset: "low",
+            originalSize: job.data.originalSize,
+            compressedSize: job.data.originalSize / 2,
         }
     }
 }
