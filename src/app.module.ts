@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from 'config/env';
 import { PrismaModule } from './database/prisma/prisma.module';
-import { VideoModule } from './modules/video/video.module';
+import { CompressorModule } from './modules/compressor/compressor.module';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { AUTH_CONFIG } from './config/auth/symbols';
 import { AuthConfigModule } from './config/auth/auth.config.module';
@@ -10,7 +10,7 @@ import { BetterAuthOptions } from 'better-auth';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CacheConfigService } from './database/cache/cache.config.service';
 import { BullModule } from '@nestjs/bullmq';
-import { BullConfigService } from './config/bullmq/bull.config.service';
+import { QueueConfigService } from './config/queue/queue.config.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
@@ -26,7 +26,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       useClass: CacheConfigService
     }),
     BullModule.forRootAsync({
-      useClass: BullConfigService
+      useClass: QueueConfigService
     }),
     AuthModule.forRootAsync({
       isGlobal: true,
@@ -39,7 +39,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       }
     }),
     PrismaModule,
-    VideoModule
+    CompressorModule
   ],
   controllers: [],
   providers: []

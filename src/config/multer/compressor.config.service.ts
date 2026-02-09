@@ -4,35 +4,31 @@ import {
   MulterOptionsFactory
 } from '@nestjs/platform-express';
 import multer from 'multer';
-import { v7 as uuidv7 } from 'uuid';
 import { mkdirSync } from 'fs';
 import { extname } from 'path';
+import { UploadRequest } from 'src/interceptors/upload/types';
 /**
  * This Service define the Multer options exclusively for the video module.
  */
 @Injectable()
-export class VideoMulterOptionsService implements MulterOptionsFactory {
+export class CompressorMulterOptions implements MulterOptionsFactory {
   createMulterOptions(): MulterModuleOptions {
     return {
       limits: {
-        fileSize: 250 * 1024 * 1024,
+        //500Mb
+        fileSize: 500 * 1024 * 1024,
         files: 1
       },
       storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-          const id = uuidv7();
-          // Pass the unique folder id to the request so the controller can catch it
-          req.body = {
-            jobId: id
-          };
-
+        destination: (req: UploadRequest, file, cb) => {
           // generates the path of the folder
-          const path = `./tmp/uploads/${id}`;
+          const path = `./tmp/uploads/${req.uploadId}`;
           mkdirSync(path, { recursive: true });
           cb(null, path);
         },
         filename: function (req, file, cb) {
-          cb(null, 'input' + extname(file.originalname));
+          const filename = 'input' + extname(file.originalname);
+          cb(null, filename);
         }
       })
     };

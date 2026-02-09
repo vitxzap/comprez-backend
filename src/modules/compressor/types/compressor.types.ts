@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import z from 'zod';
 
 const createCompressionOptionsSchema = z.object({
@@ -52,6 +51,13 @@ const createCompressionOptionsSchema = z.object({
 });
 
 /**
+ * Defines all possible compression levels 
+ */
+const createCompressionlevel = z.enum(["low", "medium", "high"])
+
+
+export type CompressionLevel = z.infer<typeof createCompressionlevel>
+/**
  * ### Video Compression Options
  * @param codec - Video codec that will be used in the compressed file.
  * @param crf - Controls the Constant Rate Factor (CRF), changing the quality of the compression. Higher the number, higher the compression level.
@@ -60,52 +66,3 @@ const createCompressionOptionsSchema = z.object({
  * @param preset - Decides the algorithm speed level. The higher the speed, lower quality the video compression will have.
  */
 export type CompressionOptions = z.infer<typeof createCompressionOptionsSchema>;
-
-const createCompressionlevel = z.enum(["low", "medium", "high"])
-export type CompressionLevel = z.infer<typeof createCompressionlevel>
-
-export class VideoDto {
-  @ApiProperty({
-    type: 'string',
-    description:
-      'Up to 500MB, supports all video extensions: mp4, mkv, mov, webm, wmv, ogg and avi.'
-  })
-  file: Express.Multer.File;
-}
-
-/**
- * This schema is used to parse the ext and mimetype of the file sent by the video controller upload endpoint.
- * To validate another file types, simple create another schema following this example:
- * { ext: string, mime: string }
- */
-export const validateVideoSchema = z.xor([
-  //mp4 video format
-  z.object({
-    ext: z.literal('mp4'),
-    mime: z.literal('video/mp4')
-  }),
-
-  //ogg video format
-  z.object({
-    ext: z.literal('ogg'),
-    mime: z.literal('video/ogg')
-  }),
-
-  //avi video format
-  z.object({
-    ext: z.literal('avi'),
-    mime: z.literal('video/vnd.avi')
-  }),
-
-  //wmv video format
-  z.object({
-    ext: z.literal('asf'),
-    mime: z.literal('video/x-ms-asf')
-  }),
-
-  //webm video format
-  z.object({
-    ext: z.literal('webm'),
-    mime: z.literal('video/webm')
-  }),
-]);

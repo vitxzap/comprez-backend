@@ -25,7 +25,7 @@ export class FileValidationPipe implements PipeTransform {
     });
     const isValid = this.schema.safeParse(unvalidatedFile).success;
 
-    //If the file is not in the schema, the file is removed with the directory
+    //If the file is not in the schema, both the file and directory are removed
     if (!isValid) {
 
       //Removes the file

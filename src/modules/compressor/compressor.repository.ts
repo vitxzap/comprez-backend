@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { VideoContract } from './video.contract';
+import { CompressorContract } from './compressor.contract';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { FileJobData, FileJobNames, FileToQueue } from 'src/common/types/index';
+import { JobData, JobNames, QueueParams } from './types/queue.types';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { Video } from 'generated/prisma/client';
 
 @Injectable()
-export class VideoRepository implements VideoContract {
+export class CompressorRepository implements CompressorContract {
   constructor(
-    @InjectQueue('video')
-    private videoQueue: Queue<FileJobData, any, FileJobNames>,
+    @InjectQueue('compressor')
+    private compressorQueue: Queue<JobData, any, JobNames>,
     private readonly prismaService: PrismaService
   ) { }
 
 
   // Send the file to the compression queue, so the worker can process it
-  async compressFile(data: FileToQueue): Promise<string | undefined> {
-    const job = await this.videoQueue.add(
+  async compressFile(params: QueueParams): Promise<string | undefined> {
+    const job = await this.compressorQueue.add(
       'compress',
       {
-        userId: data.userId,
-        ext: data.ext,
-        originalName: data.originalName,
-        originalSize: data.originalSize
+        userId: params.userId,
+        ext: params.ext,
+        originalName: params.originalName,
+        originalSize: params.originalSize
       },
       {
-        jobId: data.jobId
+        jobId: params.jobId
       }
     );
     return job.id;

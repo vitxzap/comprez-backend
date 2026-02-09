@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypedEnv } from 'config/env';
 
 @Injectable()
-export class BullConfigService implements SharedBullConfigurationFactory {
+export class QueueConfigService implements SharedBullConfigurationFactory {
   constructor(private readonly configService: ConfigService<TypedEnv>) {}
   createSharedConfiguration():
     | Promise<BullRootModuleOptions>

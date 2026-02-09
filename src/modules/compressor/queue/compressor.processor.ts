@@ -1,10 +1,10 @@
 import { SandboxedJob } from "bullmq"
-import { CompressionLevel } from "../dtos/video.dto";
+import { CompressionLevel } from "../types/compressor.types";
 import { spawn } from "child_process";
-import { FileJobData } from "src/common/types";
-import { JobReturnValues } from "../dtos/job.dto";
+import { JobData } from "../types/queue.types";
+import { JobReturnValues } from "../types/queue.types";
 
-export default async function (job: SandboxedJob<FileJobData>): Promise<JobReturnValues> {
+export default async function (job: SandboxedJob<JobData>): Promise<JobReturnValues> {
     await job.updateProgress({ porcentage: 20, originalName: job.data.originalName })
 
     return {

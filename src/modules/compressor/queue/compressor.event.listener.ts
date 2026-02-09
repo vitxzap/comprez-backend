@@ -5,12 +5,12 @@ import {
 } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import type { CompletedEventData, ProgressEventData } from '../dtos/job.dto';
+import type { CompletedEventData, ProgressEventData } from '../types/events.types';
 
 //Emits and logs video queue events so they can be used by the SSE and other parts of the application
 @QueueEventsListener('video')
-export class VideoEventListener extends QueueEventsHost {
-  private logger = new Logger(VideoEventListener.name);
+export class CompressorEventListener extends QueueEventsHost {
+  private logger = new Logger(CompressorEventListener.name);
   constructor(private eventEmitter: EventEmitter2) {
     super();
   }
@@ -31,7 +31,7 @@ export class VideoEventListener extends QueueEventsHost {
     this.eventEmitter.emit(`job.${job.jobId}.progress`, {
       ...job.data
     })
-    this.logger.debug(`JobId: ${job.jobId} was update with progress: ${JSON.stringify(job.data.porcentage)}`)
+    this.logger.debug(`JobId: ${job.jobId} was update with progress: ${job.data.porcentage}`)
   }
 
   @OnQueueEvent('completed')

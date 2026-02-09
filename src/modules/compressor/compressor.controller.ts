@@ -8,19 +8,13 @@ import {
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
-import { v7 as uuidv7 } from 'uuid';
-import { VideoService } from './video.service';
+import { CompressorService } from './compressor.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
-  OptionalAuth,
   Session,
   type UserSession
 } from '@thallesp/nestjs-better-auth';
 import { FileValidationPipe } from 'src/pipes/file.validation.pipe';
-import {
-  validateVideoSchema,
-  VideoDto
-} from 'src/modules/video/dtos/video.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -31,22 +25,25 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
-import { ErrorResponseDto } from 'src/common/dtos/response.dto';
+import { CompressResponseDto, ErrorResponseDto } from 'src/dto/response.dto';
 import { fromEvent, map, merge, Observable } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { extname } from 'path';
-@OptionalAuth()
+import { CompressDto } from 'src/dto/compressor.dto';
+import { validateCompressorFile } from 'src/pipes/types';
+import { UploadInterceptor } from 'src/interceptors/upload/upload.interceptor';
+
 @ApiCookieAuth()
-@Controller('video')
-export class VideoController {
+@Controller('compressor')
+export class CompressorController {
   constructor(
-    private readonly videoService: VideoService,
+    private readonly compressorService: CompressorService,
     private eventEmiiter: EventEmitter2
   ) { }
 
   @ApiOkResponse({
-    example: { message: 'compressed!' },
-    description: 'OK. Video compressed successfully!'
+    type: CompressResponseDto,
+    description: 'OK. Video sent to the compression queue.'
   })
   @ApiUnprocessableEntityResponse({
     type: ErrorResponseDto,
@@ -69,28 +66,23 @@ export class VideoController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Provide your file via multipart/form-data.',
-    type: VideoDto
+    type: CompressDto
   })
   @Post('compress')
-  @UseInterceptors(FileInterceptor('video'))
+  @UseInterceptors(UploadInterceptor, FileInterceptor('video'))
   async compress(
-    @UploadedFile(new FileValidationPipe(validateVideoSchema))
-    file: VideoDto['file'],
-    //extracts the unique id created by multer
-    @Body() body: { id: string },
+    @UploadedFile(new FileValidationPipe(validateCompressorFile))
+    file: CompressDto['file'],
+    //extracts the unique folderId created by multer
+    @Body() body: CompressDto["body"],
     @Session() session: UserSession
   ) {
-    // This is not safe. just for testing purposes
-    let userId: string = '';
-    if (!session) {
-      userId = uuidv7();
-    }
 
-    const jobId = await this.videoService.compressFile({
+    const jobId = await this.compressorService.compressFile({
       originalSize: file.size,
-      jobId: body.id,
+      jobId: body.folderId,
       originalName: file.originalname,
-      userId: userId,
+      userId: session.user.id,
       ext: extname(file.path)
     });
     return {
