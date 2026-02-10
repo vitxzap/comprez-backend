@@ -19,13 +19,13 @@ model User {
   isAnonymous   Boolean?  @default(false)
   sessions      Session[]
   accounts      Account[]
-  videos        Video[]
+  compressions  Compression[]
 
   @@unique([email])
   @@map("user")
 }
 
-model Video {
+model Compression {
   id              String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   originalName    String
   ext             String
@@ -38,7 +38,7 @@ model Video {
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@map("video")
+  @@map("compression")
 }
 
 model Session {
