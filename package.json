@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "worker:compressor": "bun run queues/compressor/worker.ts"
   },
   "dependencies": {
     "@file-type/av": "^0.2.0",
@@ -35,7 +36,7 @@
     "@scalar/nestjs-api-reference": "^1.0.15",
     "@thallesp/nestjs-better-auth": "^2.2.2",
     "better-auth": "^1.4.10",
-    "bullmq": "^5.67.1",
+    "bullmq": "^5.67.3",
     "cache-manager": "^7.2.8",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",

@@ -35,7 +35,7 @@ export class CompressorRepository implements CompressorContract {
 
   //Save the compression metadata to the database.
   async saveCompressionData(file: JobReturnValues["data"]): Promise<void> {
-    await this.prismaService.video.create({
+    await this.prismaService.compression.create({
       data: {
         originalName: file.originalName,
         userId: file.userId,

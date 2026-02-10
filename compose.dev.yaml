@@ -14,7 +14,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql
 
-  cache:
+  redis:
     container_name: redis
     image: redis:8.4-alpine3.22
     restart: always
@@ -27,6 +27,21 @@ services:
       - 6379:6379
     volumes:
       - redis_data:/var/lib/redis
+
+  compressor_worker:
+    container_name: compressor_worker
+    image: oven/bun:1
+    working_dir: /app
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL: ${REDIS_URL}
+    depends_on:
+      - redis
+    command: bun run --watch queues/compressor/worker.ts
+
 
 volumes:
   postgres:
