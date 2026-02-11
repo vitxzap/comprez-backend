@@ -26,7 +26,7 @@ export class CompressorMulterOptions implements MulterOptionsFactory {
           mkdirSync(path, { recursive: true });
           cb(null, path);
         },
-        filename: function (req, file, cb) {
+        filename: (req, file, cb) => {
           const filename = 'input' + extname(file.originalname);
           cb(null, filename);
         }
