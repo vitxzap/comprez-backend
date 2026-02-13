@@ -28,21 +28,6 @@ services:
     volumes:
       - redis_data:/var/lib/redis
 
-  compressor_worker:
-    container_name: compressor_worker
-    image: oven/bun:1
-    working_dir: /app
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    environment:
-      - REDIS_URL: ${REDIS_URL}
-    depends_on:
-      - redis
-    command: bun run --watch queues/compressor/worker.ts
-
-
 volumes:
   postgres:
   redis_data:
