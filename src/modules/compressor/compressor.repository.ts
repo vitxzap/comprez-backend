@@ -41,6 +41,7 @@ export class CompressorRepository implements CompressorContract {
         userId: file.userId,
         destination: file.destination,
         ext: file.ext,
+
         preset: file.preset,
         originalSize: file.originalSize,
         compressedSize: file.compressedSize,

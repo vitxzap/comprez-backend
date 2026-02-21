@@ -26,19 +26,18 @@ model User {
 }
 
 model Compression {
-  id             String @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  id             String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
   originalName   String
   ext            String
   preset         String
   compressedSize Int
   originalSize   Int
-  status         Status @relation(fields: [statusId], references: [id])
-  statusId       Int
-
-  destination String
-  createdAt   DateTime @default(now())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status         Status?   @relation(fields: [statusId], references: [id])
+  statusId       Int?
+  destination    String
+  createdAt      DateTime @default(now())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("compression")

@@ -23,6 +23,7 @@ export class CompressorEventListener extends QueueEventsHost {
       added: true,
       processor: job.name
     });
+    
     this.logger.debug(`JobId: ${job.jobId} added to the queue`)
   }
 
