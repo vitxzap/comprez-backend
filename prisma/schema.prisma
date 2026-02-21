@@ -9,14 +9,14 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String        @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean       @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  isAnonymous   Boolean?  @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  isAnonymous   Boolean?      @default(false)
   sessions      Session[]
   accounts      Account[]
   compressions  Compression[]
@@ -26,19 +26,30 @@ model User {
 }
 
 model Compression {
-  id              String   @id @default(dbgenerated("uuidv7()")) @db.Uuid
-  originalName    String
-  ext             String
-  preset          String
-  compressedSize  Int
-  originalSize    Int
-  destination     String
-  createdAt       DateTime @default(now())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String @id @default(dbgenerated("uuidv7()")) @db.Uuid
+  originalName   String
+  ext            String
+  preset         String
+  compressedSize Int
+  originalSize   Int
+  status         Status @relation(fields: [statusId], references: [id])
+  statusId       Int
+
+  destination String
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("compression")
+}
+
+model Status {
+  id           Int           @id @default(autoincrement())
+  name         String
+  compressions Compression[]
+
+  @@map("status")
 }
 
 model Session {
