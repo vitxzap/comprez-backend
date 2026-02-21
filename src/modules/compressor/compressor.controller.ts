@@ -33,7 +33,6 @@ import { extname } from 'path';
 import { CompressDto } from 'src/dto/compressor.dto';
 import { validateCompressorFile } from 'src/pipes/types';
 import { UploadInterceptor } from 'src/interceptors/upload/upload.interceptor';
-
 @ApiCookieAuth()
 @Controller('compressor')
 export class CompressorController {
@@ -120,3 +119,4 @@ export class CompressorController {
     return merge(progressEvent, addedEvent, completedEvent);
   }
 }
+
