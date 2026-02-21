@@ -21,6 +21,7 @@
     "worker:compressor": "bun run queues/compressor/worker.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.995.0",
     "@file-type/av": "^0.2.0",
     "@keyv/redis": "^5.1.6",
     "@nestjs/bullmq": "^11.0.4",

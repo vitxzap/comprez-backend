@@ -6,7 +6,7 @@ import { CompressorController } from './compressor.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { CompressorMulterOptions } from 'src/config/multer/compressor.config.service';
 import { BullModule } from '@nestjs/bullmq';
-import { CompressorEventListener } from './event/compressor.event.listener';
+import { CompressorEventListener } from './events/compressor.event.listener';
 import { PrismaModule } from 'src/database/prisma/prisma.module';
 import { queues } from 'queues/config/names';
 
