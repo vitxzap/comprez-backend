@@ -42,6 +42,10 @@ export class CompressorController {
     private eventEmiiter: EventEmitter2
   ) { }
 
+  //TODO: 
+  // Endpoint to upload files through pre-signed URL (S3)
+  // Endpoint to download files though pre-signed URL (S3) 
+
   @ApiOkResponse({
     type: CompressResponseDto,
     description: 'OK. Video sent to the compression queue.'
