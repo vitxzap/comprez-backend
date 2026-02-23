@@ -9,6 +9,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { CompressorEventListener } from './events/compressor.event.listener';
 import { PrismaModule } from 'src/database/prisma/prisma.module';
 import { queues } from 'queues/config/names';
+import { FeatureFlagModule } from '../flagsmith/flagsmith.module';
 
 @Module({
   providers: [
@@ -21,6 +22,7 @@ import { queues } from 'queues/config/names';
   ],
   imports: [
     PrismaModule,
+    FeatureFlagModule,
     BullModule.registerQueue({
       name: queues.compressor,
       defaultJobOptions: {

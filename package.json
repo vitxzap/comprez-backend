@@ -46,6 +46,7 @@
     "class-validator": "^0.14.3",
     "dotenv": "^17.3.1",
     "file-type": "^21.3.0",
+    "flagsmith-nodejs": "^7.0.3",
     "helmet": "^8.1.0",
     "pg": "^8.18.0",
     "prisma": "^7.4.1",

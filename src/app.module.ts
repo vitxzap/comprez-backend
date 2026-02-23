@@ -14,6 +14,7 @@ import { QueueConfigService } from './config/queue/queue.config.service';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SqsModule } from "@ssut/nestjs-sqs"
 import { SqsConfigService } from './config/aws/sqs.config.service';
+import { FeatureFlagModule } from './modules/flagsmith/flagsmith.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -34,6 +35,7 @@ import { SqsConfigService } from './config/aws/sqs.config.service';
     SqsModule.registerAsync({
       useClass: SqsConfigService
     }),
+
     AuthModule.forRootAsync({
       isGlobal: true,
       imports: [AuthConfigModule],

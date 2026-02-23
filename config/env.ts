@@ -15,6 +15,7 @@ const createEnvSchema = z.object({
   S3_ACCESS_KEY: z.string().nonempty(),
   S3_SECRET_KEY: z.string().nonempty(),
   REDIS_PASSWORD: z.string().nonempty(),
+  FLAGSMITH_KEY: z.string().nonempty(),
   REDIS_URL: z.string().nonempty()
 });
 
