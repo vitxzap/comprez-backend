@@ -1,17 +1,15 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
 import { env } from "config/env";
-import { fsync, readFileSync } from "node:fs";
-import { Pool } from "pg";
+
 //PrismaClient configurations
 const prisma = new PrismaClient({
-    adapter: new PrismaPg(new Pool({
-        connectionString: env.DATABASE_URL,
+    adapter: new PrismaPg({
+        connectionString: env.DATABASE_URL, 
         ssl: {
-            rejectUnauthorized: false, 
-            ca: readFileSync("./global-bundle.pem")
+            rejectUnauthorized: false
         }
-    }))
+    })
 });
 
 //Creates all default status
