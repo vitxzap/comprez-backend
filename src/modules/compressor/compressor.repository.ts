@@ -4,6 +4,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { JobData, JobNames, JobReturnValues, QueueParams } from './types/queue.types';
 import { PrismaService } from 'src/database/prisma/prisma.service';
+import { SqsService } from '@ssut/nestjs-sqs';
 
 
 @Injectable()
@@ -11,13 +12,14 @@ export class CompressorRepository implements CompressorContract {
   constructor(
     @InjectQueue('compressor')
     private compressorQueue: Queue<JobData, any, JobNames>,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private sqsService: SqsService
   ) { }
 
 
   // Send the file to the compression queue, so the worker can process it
   async compressFile(params: QueueParams): Promise<string | undefined> {
-    const job = await this.compressorQueue.add(
+    /* const job = await this.compressorQueue.add(
       'compress',
       {
         userId: params.userId,
@@ -29,7 +31,12 @@ export class CompressorRepository implements CompressorContract {
         jobId: params.jobId
       }
     );
-    return job.id;
+    return job.id; */
+    const message = await this.sqsService.send("compressor-producer", {
+      body: params.originalName,
+      id: params.userId
+    })
+    return message[0].MessageId
   }
 
 

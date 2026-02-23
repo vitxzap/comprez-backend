@@ -84,7 +84,7 @@ export class CompressorController {
 
     const jobId = await this.compressorService.compressFile({
       originalSize: file.size,
-      jobId: body.folderId,
+      jobId: body.uploadId,
       originalName: file.originalname,
       userId: session.user.id,
       ext: extname(file.path)

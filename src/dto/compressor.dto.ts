@@ -10,15 +10,16 @@ export class CompressDto {
 
     @ApiProperty({
         type: 'object',
+
         properties: {
             folderId: {
                 type: "string",
-                
+
             }
         },
         description: "Contains useful informations about how the compression will behave"
     })
     body: {
-        folderId: string
+        uploadId: string
     }
 }

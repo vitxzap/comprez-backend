@@ -10,6 +10,7 @@ import { UploadRequest } from "./types";
 @Injectable()
 export class UploadInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
+        //Intercepts the request and generates an uuid used by multer an as messageId by sqs producer
         const req: UploadRequest = context.switchToHttp().getRequest();
         req.uploadId = uuidv7();
         return next.handle()
