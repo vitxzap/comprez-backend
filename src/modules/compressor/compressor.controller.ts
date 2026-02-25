@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   MessageEvent,
   Param,
   Post,
@@ -26,11 +27,13 @@ import {
   ApiUnauthorizedResponse,
   ApiUnprocessableEntityResponse
 } from '@nestjs/swagger';
-import { CompressResponseDto, ErrorResponseDto } from 'src/dto/response.dto';
+import { ErrorResponseDto } from 'src/dto/response.dto';
+import { CreatePresignedUrlDto } from "src/modules/aws/s3/dtos/aws.s3.dto"
+import { CompressResponseDto } from "./dtos/compressor.dto"
 import { fromEvent, map, merge, Observable } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { extname } from 'path';
-import { CompressDto } from 'src/dto/compressor.dto';
+import { CompressDto } from 'src/modules/compressor/dtos/compressor.dto';
 import { validateCompressorFile } from 'src/pipes/types';
 import { UploadInterceptor } from 'src/interceptors/upload/upload.interceptor';
 @ApiCookieAuth()
@@ -92,6 +95,14 @@ export class CompressorController {
     return {
       jobId: jobId
     };
+  }
+
+  @Get("create-url")
+  async createPresignedUrl(@Body() createPresignedUrlDto: CreatePresignedUrlDto) {
+    const url = await this.compressorService.createPresignedUrl(createPresignedUrlDto)
+    return {
+      url: url
+    }
   }
 
 

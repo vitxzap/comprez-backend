@@ -10,6 +10,7 @@ import { CompressorEventListener } from './events/compressor.event.listener';
 import { PrismaModule } from 'src/database/prisma/prisma.module';
 import { queues } from 'queues/config/names';
 import { FeatureFlagModule } from '../flagsmith/flagsmith.module';
+import { S3Module } from '../aws/s3/aws.s3.module';
 
 @Module({
   providers: [
@@ -23,6 +24,7 @@ import { FeatureFlagModule } from '../flagsmith/flagsmith.module';
   imports: [
     PrismaModule,
     FeatureFlagModule,
+    S3Module,
     BullModule.registerQueue({
       name: queues.compressor,
       defaultJobOptions: {

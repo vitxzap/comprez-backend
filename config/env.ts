@@ -12,8 +12,7 @@ const createEnvSchema = z.object({
   BETTER_AUTH_SECRET: z.string().min(32).nonempty(),
   BETTER_AUTH_URL: z.url().nonempty(),
   SQS_COMPRESS_URL: z.url().nonempty(),
-  S3_ACCESS_KEY: z.string().nonempty(),
-  S3_SECRET_KEY: z.string().nonempty(),
+  S3_BUCKET: z.string().nonempty(),
   REDIS_PASSWORD: z.string().nonempty(),
   FLAGSMITH_KEY: z.string().nonempty(),
   REDIS_URL: z.string().nonempty()

@@ -4,8 +4,5 @@ export class ErrorResponseDto {
   message: string;
 }
 
-export class CompressResponseDto {
-  @ApiProperty({ required: true, description: "The jobId of your file compression, use it to track the compression status" })
-  jobId: string;
-}
+
 

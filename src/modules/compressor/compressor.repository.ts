@@ -5,10 +5,10 @@ import { Queue } from 'bullmq';
 import { JobData, JobNames, JobReturnValues, QueueParams } from './types/queue.types';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { SqsService } from '@ssut/nestjs-sqs';
-import { FEATURE_FLAG } from '../flagsmith/flagsmith.provider';
-import { Flagsmith } from 'flagsmith-nodejs';
 import { FeatureFlagService } from '../flagsmith/flagsmith.service';
 import { Flags } from '../flagsmith/types';
+import { CreatePresignedUrlDto } from "src/modules/aws/s3/dtos/aws.s3.dto"
+import { S3Service } from '../aws/s3/aws.s3.service';
 
 
 @Injectable()
@@ -18,7 +18,8 @@ export class CompressorRepository implements CompressorContract {
     private compressorQueue: Queue<JobData, any, JobNames>,
     private readonly prismaService: PrismaService,
     private sqsService: SqsService,
-    private featureFlag: FeatureFlagService
+    private featureFlag: FeatureFlagService,
+    private s3Service: S3Service
   ) { }
   private logger = new Logger(CompressorRepository.name)
 
@@ -65,5 +66,10 @@ export class CompressorRepository implements CompressorContract {
         compressedSize: file.compressedSize,
       }
     })
+  }
+
+  async createPresignedUrl(params: CreatePresignedUrlDto): Promise<string | undefined> {
+    const url = await this.s3Service.createPresignedUrl(params)
+    return url
   }
 }
