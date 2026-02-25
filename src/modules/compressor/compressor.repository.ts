@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { BadGatewayException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
@@ -69,7 +69,12 @@ export class CompressorRepository implements CompressorContract {
   }
 
   async createPresignedUrl(params: CreatePresignedUrlDto): Promise<string | undefined> {
-    const url = await this.s3Service.createPresignedUrl(params)
-    return url
+    if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
+      const url = await this.s3Service.createPresignedUrl(params)
+      return url
+    }
+    else {
+      throw new ForbiddenException("this feature is currently disabled")
+    }
   }
 }

@@ -8,7 +8,7 @@ import { S3_CLIENT } from "./aws.s3.provider";
 @Injectable()
 export class S3Service {
     constructor(
-        private readonly configService: ConfigService<TypedEnv>, 
+        private readonly configService: ConfigService<TypedEnv>,
         @Inject(S3_CLIENT) private readonly s3Client: S3Client
     ) { }
 
@@ -23,7 +23,4 @@ export class S3Service {
         }), { expiresIn: 3600 })
         return url;
     }
-
-
-
 }

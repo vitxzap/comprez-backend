@@ -104,8 +104,6 @@ export class CompressorController {
       url: url
     }
   }
-
-
   //Transmits server-side events to the client based on the jobId
   @Sse('status/:id')
   @AllowAnonymous()
