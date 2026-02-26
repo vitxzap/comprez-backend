@@ -1,6 +1,5 @@
 import { Inject, Injectable, } from "@nestjs/common";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
-import { RequestS3UploadDto } from "./dtos/aws.s3.dto";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { ConfigService } from "@nestjs/config";
 import { TypedEnv } from "config/env";
@@ -10,17 +9,28 @@ export class S3Service {
     constructor(
         private readonly configService: ConfigService<TypedEnv>,
         @Inject(S3_CLIENT) private readonly s3Client: S3Client
-    ) { }
+    ) {
+        this.bucket = this.configService.getOrThrow("S3_BUCKET");
+    }
+    private readonly bucket: string;
 
-
-    //Creates a new PresignedUrl to the specified bucket and returns the url
-    async requestS3Upload(params: RequestS3UploadDto, userId: string) {
-        const bucket = this.configService.getOrThrow("S3_BUCKET")
+    //Creates a new Presigned url to upload the file to the bucket and returns it
+    async requestS3Upload(filename: string, contentType: string, userId: string) {
         const url = await getSignedUrl(this.s3Client, new PutObjectCommand({
-            Bucket: bucket,
-            Key: `uploads/${userId}/${params.filename}`,
-            ContentType: params.mimetype
+            Bucket: this.bucket,
+            Key: `uploads/${userId}/${filename}`,
+            ContentType: contentType
         }), { expiresIn: 3600 })
+        return url;
+    }
+
+
+    //Creates a new presigned url to download the file from the bucket and returns it
+    async requestS3Download(key: string) {
+        const url = await getSignedUrl(this.s3Client, new GetObjectCommand({
+            Bucket: this.bucket,
+            Key: key,
+        }))
         return url;
     }
 }
