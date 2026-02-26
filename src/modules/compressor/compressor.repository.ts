@@ -60,7 +60,6 @@ export class CompressorRepository implements CompressorContract {
         userId: file.userId,
         destination: file.destination,
         ext: file.ext,
-
         preset: file.preset,
         originalSize: file.originalSize,
         compressedSize: file.compressedSize,
@@ -68,9 +67,11 @@ export class CompressorRepository implements CompressorContract {
     })
   }
 
-  async createPresignedUrl(params: CreatePresignedUrlDto): Promise<string | undefined> {
+
+  //Creates an presignedUrl to upload files to the s3
+  async createPresignedUrl(params: CreatePresignedUrlDto, userId: string): Promise<string | undefined> {
     if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
-      const url = await this.s3Service.createPresignedUrl(params)
+      const url = await this.s3Service.createPresignedUrl(params, userId)
       return url
     }
     else {

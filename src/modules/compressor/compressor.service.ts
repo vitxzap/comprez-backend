@@ -18,8 +18,8 @@ export class CompressorService {
     this.logger.log("Compression data saved into database! userId: " + payload.data.userId)
   }
 
-  async createPresignedUrl (params: CreatePresignedUrlDto) {
-    const url = await this.compressorContract.createPresignedUrl(params)
+  async createPresignedUrl (params: CreatePresignedUrlDto, userId: string) {
+    const url = await this.compressorContract.createPresignedUrl(params, userId)
     return url
   }
 }

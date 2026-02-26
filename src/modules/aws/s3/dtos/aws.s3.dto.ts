@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsMimeType, IsString } from "class-validator"
+import { IsMimeType, IsString, IsUUID } from "class-validator"
 
 export class CreatePresignedUrlDto {
     @ApiProperty()

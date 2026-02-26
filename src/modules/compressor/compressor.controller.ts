@@ -98,12 +98,13 @@ export class CompressorController {
   }
 
   @Get("create-url")
-  async createPresignedUrl(@Body() createPresignedUrlDto: CreatePresignedUrlDto) {
-    const url = await this.compressorService.createPresignedUrl(createPresignedUrlDto)
+  async createPresignedUrl(@Body() createPresignedUrlDto: CreatePresignedUrlDto, @Session() session: UserSession) {
+    const url = await this.compressorService.createPresignedUrl(createPresignedUrlDto, session.user.id)
     return {
       url: url
     }
   }
+  
   //Transmits server-side events to the client based on the jobId
   @Sse('status/:id')
   @AllowAnonymous()

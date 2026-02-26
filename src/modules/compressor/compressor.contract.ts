@@ -3,5 +3,5 @@ import { JobReturnValues, QueueParams } from './types/queue.types';
 export abstract class CompressorContract {
   abstract compressFile(params: QueueParams): Promise<string | undefined>;
   abstract saveCompressionData(file: JobReturnValues["data"]): Promise<void>;
-  abstract createPresignedUrl(params: CreatePresignedUrlDto): Promise<string | undefined>;
+  abstract createPresignedUrl(params: CreatePresignedUrlDto, userId: string): Promise<string | undefined>;
 }
