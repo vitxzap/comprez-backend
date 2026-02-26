@@ -13,11 +13,9 @@ const createEnvSchema = z.object({
   BETTER_AUTH_URL: z.url().nonempty(),
   SQS_COMPRESS_URL: z.url().nonempty(),
   S3_BUCKET: z.string().nonempty(),
-  REDIS_PASSWORD: z.string().nonempty(),
   AWS_ACCESS_KEY: z.string().nonempty(),
   AWS_SECRET_KEY: z.string().nonempty(),
   FLAGSMITH_KEY: z.string().nonempty(),
-  REDIS_URL: z.string().nonempty()
 });
 
 //exports a parsed constant of process.env, it can be used all over the app

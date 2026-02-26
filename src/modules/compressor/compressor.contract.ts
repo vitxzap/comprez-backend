@@ -1,7 +1,5 @@
-import { CreatePresignedUrlDto } from 'src/modules/aws/s3/dtos/aws.s3.dto';
-import { JobReturnValues, QueueParams } from './types/queue.types';
+import { RequestS3UploadDto } from 'src/aws/s3/dtos/aws.s3.dto';
 export abstract class CompressorContract {
-  abstract compressFile(params: QueueParams): Promise<string | undefined>;
-  abstract saveCompressionData(file: JobReturnValues["data"]): Promise<void>;
-  abstract createPresignedUrl(params: CreatePresignedUrlDto, userId: string): Promise<string | undefined>;
+  abstract requestS3Upload(params: RequestS3UploadDto, userId: string): Promise<string | undefined | void>;
+  abstract requestS3Download(params: RequestS3UploadDto): Promise<string | undefined | void>;
 }

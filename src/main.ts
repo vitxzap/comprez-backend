@@ -5,11 +5,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import helmet from 'helmet';
-import { Flagsmith } from "flagsmith-nodejs"
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false
   });
+  app.setGlobalPrefix(env.GLOBAL_PREFIX);
   //Swagger + Scalar set-up
   const config = new DocumentBuilder()
     .setTitle('Comprez documentation')
@@ -48,7 +48,7 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
     credentials: true
   });
-  app.setGlobalPrefix(env.GLOBAL_PREFIX);
+  
 
   await app.listen(env.PORT);
 }
