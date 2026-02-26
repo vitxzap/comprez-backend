@@ -7,6 +7,7 @@ const createEnvSchema = z.object({
   DATABASE_URL: z.string().nonempty(),
   POSTGRES_PASSWORD: z.string().nonempty(),
   POSTGRES_DB: z.string().nonempty(),
+  POSTGRES_HOST: z.string().nonempty(),
   GLOBAL_PREFIX: z.string().nonempty().default('v1'),
   POSTGRES_USER: z.string().nonempty(),
   BETTER_AUTH_SECRET: z.string().min(32).nonempty(),

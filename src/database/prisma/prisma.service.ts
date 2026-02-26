@@ -3,17 +3,21 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { TypedEnv } from 'config/env';
 import { PrismaClient } from 'generated/prisma/client';
+import { readFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor(private readonly configService: ConfigService<TypedEnv>) {
-    const db = configService.getOrThrow('DATABASE_URL');
     const adapter = new PrismaPg({
-      connectionString: db,
-
-      //AWS RDS needs this info to create a connection without any SSL errors
+      host: configService.getOrThrow("POSTGRES_HOST"),
+      password: configService.getOrThrow("POSTGRES_PASSWORD"),
+      user: configService.getOrThrow("POSTGRES_USER"),
+      database: configService.getOrThrow("POSTGRES_DB"),
+      //AWS RDS needs this to create a connection without any SSL errors
       ssl: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        ca: readFileSync("./certs/global-bundle.pem").toString()
       }
     });
     super({ adapter });

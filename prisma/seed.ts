@@ -1,13 +1,18 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
+import { readFileSync } from "node:fs";
 import { env } from "config/env";
 
 //PrismaClient configurations
 const prisma = new PrismaClient({
     adapter: new PrismaPg({
-        connectionString: env.DATABASE_URL, 
+        host: env.POSTGRES_HOST,
+        password: env.POSTGRES_PASSWORD,
+        user: env.POSTGRES_USER,
+        database: env.POSTGRES_DB,
         ssl: {
-            rejectUnauthorized: false
+            rejectUnauthorized: false,
+            ca: readFileSync("./certs/global-bundle.pem").toString()
         }
     })
 });
