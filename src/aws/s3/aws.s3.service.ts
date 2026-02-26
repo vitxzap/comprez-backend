@@ -14,7 +14,7 @@ export class S3Service {
 
 
     //Creates a new PresignedUrl to the specified bucket and returns the url
-    async createPresignedUrl(params: RequestS3UploadDto, userId: string) {
+    async requestS3Upload(params: RequestS3UploadDto, userId: string) {
         const bucket = this.configService.getOrThrow("S3_BUCKET")
         const url = await getSignedUrl(this.s3Client, new PutObjectCommand({
             Bucket: bucket,

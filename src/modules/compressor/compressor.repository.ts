@@ -18,7 +18,7 @@ export class CompressorRepository implements CompressorContract {
   //Creates a presigned url to upload files to the s3 bucket
   async requestS3Upload(params: RequestS3UploadDto, userId: string): Promise<string | undefined> {
     if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
-      const url = await this.s3Service.createPresignedUrl(params, userId)
+      const url = await this.s3Service.requestS3Upload(params, userId)
       this.logger.warn("S3 upload url generated")
       return url
     }
