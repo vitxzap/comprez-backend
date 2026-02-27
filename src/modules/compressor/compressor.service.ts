@@ -14,11 +14,12 @@ export class CompressorService {
   private logger = new Logger(CompressorService.name)
   async requestS3Upload(params: RequestS3UploadDto, userId: string) {
     if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
+      //Generates the key (path) for the s3
+      const key = this.s3Service.generateS3Key(userId, params.filename)
 
-      const url = await this.s3Service.requestS3Upload(params.filename, params.mimetype, userId)
+      const url = await this.s3Service.requestS3Upload(key, params.mimetype)
       this.logger.debug("S3 upload url generated")
-
-      await this.compressorContract.storeCompression(url, userId)
+      await this.compressorContract.storeCompression(key, userId)
       this.logger.debug("Compression data stored into database")
 
       return url
@@ -35,13 +36,11 @@ export class CompressorService {
     if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
       const key = await this.compressorContract.getDestinationById(userId, compressionId)
 
-      if (key) {
-        const url = await this.s3Service.requestS3Download(key)
-        this.logger.debug("S3 download url generated")
-        return url
-      }
 
-      throw new NotFoundException("Data not found")
+      const url = await this.s3Service.requestS3Download(key)
+      this.logger.debug("S3 download url generated")
+      return url
+
     }
     else {
 

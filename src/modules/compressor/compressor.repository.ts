@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { InjectQueue } from '@nestjs/bullmq';
 import { FeatureFlagService } from '../flagsmith/flagsmith.service';
@@ -36,6 +36,9 @@ export class CompressorRepository implements CompressorContract {
         userId: userId
       }
     })
-    return key?.s3Key
+    if (!key) {
+      throw new NotFoundException()
+    }
+    return key.s3Key
   }
 }
