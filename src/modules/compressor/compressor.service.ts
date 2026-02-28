@@ -20,7 +20,6 @@ export class CompressorService {
       this.logger.debug("S3 upload url generated")
       await this.compressorContract.storeCompression(key, userId)
       this.logger.debug("Compression data stored into database")
-
       return url
     }
     else {

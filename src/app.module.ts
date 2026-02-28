@@ -9,6 +9,8 @@ import { AuthConfigModule } from './auth/auth.config.module';
 import { BetterAuthOptions } from 'better-auth';
 import { SqsModule } from "@ssut/nestjs-sqs"
 import { SqsConfigService } from './aws/config/sqs.config.service';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformResponseInterceptor } from './interceptors/response.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,6 +35,11 @@ import { SqsConfigService } from './aws/config/sqs.config.service';
     CompressorModule
   ],
   controllers: [],
-  providers: []
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformResponseInterceptor
+    }
+  ]
 })
 export class AppModule { }

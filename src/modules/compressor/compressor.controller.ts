@@ -53,14 +53,12 @@ export class CompressorController {
     description: 'Unauthorized. Due to missing or invalid authentication.'
   })
   @Get("request-upload")
-  async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession) {
+  async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession): Promise<CompressorUrlResponseDto> {
     const url = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
     return {
       url: url
     }
   }
-
-
 
   @ApiOperation({
     description: "Requests a presigned url to download the specified file",
@@ -84,7 +82,7 @@ export class CompressorController {
     description: 'Unauthorized. Due to missing or invalid authentication.'
   })
   @Get("request-download/:compressionId")
-  async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession) {
+  async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession): Promise<CompressorUrlResponseDto> {
     const url = await this.compressorService.requestS3Download(session.user.id, compressionId)
     return {
       url: url
