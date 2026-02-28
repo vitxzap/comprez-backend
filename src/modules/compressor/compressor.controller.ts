@@ -30,7 +30,7 @@ export class CompressorController {
   //TODO: 
   // Endpoint to upload files through pre-signed URL (S3) -- done (25/02)
   // Endpoint to download files though pre-signed URL (S3) -- done(26/02)
-
+  // Return the compression id so the user/front can access it -- 
   @ApiOperation({
     description: "Requests a presigned url to upload the file."
   })
