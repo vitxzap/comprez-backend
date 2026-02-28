@@ -32,23 +32,21 @@ model Compression {
   preset         String
   compressedSize Int
   originalSize   Int
-  status         Status?   @relation(fields: [statusId], references: [id])
-  statusId       Int?
+  status        Status @default(CREATED)
   s3Key          String
   createdAt      DateTime @default(now())
   userId         String
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@index([userId])
   @@map("compression")
 }
 
-model Status {
-  id           Int           @id @default(autoincrement())
-  name         String
-  compressions Compression[]
-
-  @@map("status")
+enum Status {
+  CREATED
+  WAITING
+  PENDING
+  FINISHED
+  FAILED
 }
 
 model Session {

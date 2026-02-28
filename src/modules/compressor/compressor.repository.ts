@@ -24,7 +24,6 @@ export class CompressorRepository implements CompressorContract {
         originalName: "teste",
         originalSize: 2,
         preset: "low",
-        statusId: 1
       }
     })
   }

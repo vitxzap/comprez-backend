@@ -22,7 +22,7 @@ export class CompressorController {
 
   //TODO: 
   // Endpoint to upload files through pre-signed URL (S3) -- done (25/02)
-  // Endpoint to download files though pre-signed URL (S3) 
+  // Endpoint to download files though pre-signed URL (S3) -- done(26/02)
 
   @Get("request-upload")
   async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession) {
@@ -32,6 +32,8 @@ export class CompressorController {
     }
   }
 
+
+  
   @Get("request-download/:compressionId")
   async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession) {
     const url = await this.compressorService.requestS3Download(session.user.id, compressionId)

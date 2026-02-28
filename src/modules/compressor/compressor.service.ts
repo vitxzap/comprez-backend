@@ -1,7 +1,6 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { RequestS3UploadDto } from "./dtos/compressor.dto"
-import { Flagsmith } from 'flagsmith-nodejs';
 import { FeatureFlagService } from '../flagsmith/flagsmith.service';
 import { Flags } from '../flagsmith/types';
 import { S3Service } from 'src/aws/s3/aws.s3.service';
