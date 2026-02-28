@@ -10,9 +10,16 @@ import {
   type UserSession
 } from '@thallesp/nestjs-better-auth';
 import {
+  ApiBadRequestResponse,
   ApiCookieAuth,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { RequestS3UploadDto } from "./dtos/compressor.dto"
+import { CompressorUrlResponseDto, RequestS3UploadDto } from "./dtos/compressor.dto"
+import { ErrorResponseDto } from 'src/utils/dtos/response.dto';
 @ApiCookieAuth()
 @Controller('compressor')
 export class CompressorController {
@@ -24,6 +31,27 @@ export class CompressorController {
   // Endpoint to upload files through pre-signed URL (S3) -- done (25/02)
   // Endpoint to download files though pre-signed URL (S3) -- done(26/02)
 
+  @ApiOperation({
+    description: "Requests a presigned url to upload the file."
+  })
+  @ApiOkResponse({
+    description: "Ok. URL Created.",
+    type: CompressorUrlResponseDto
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description:
+      'Bad request. Usually due to missing parameters, or invalid parameters.'
+  })
+  @ApiInternalServerErrorResponse({
+    type: ErrorResponseDto,
+    description:
+      'Internal Server Error. This is a problem with the server that you cannot fix.'
+  })
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: 'Unauthorized. Due to missing or invalid authentication.'
+  })
   @Get("request-upload")
   async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession) {
     const url = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
@@ -33,11 +61,34 @@ export class CompressorController {
   }
 
 
-  
+
+  @ApiOperation({
+    description: "Requests a presigned url to download the specified file",
+  })
+  @ApiOkResponse({
+    type: CompressorUrlResponseDto,
+    description: "Ok. Url created."
+  })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description:
+      'Bad request. Usually due to missing parameters, or invalid parameters.'
+  })
+  @ApiInternalServerErrorResponse({
+    type: ErrorResponseDto,
+    description:
+      'Internal Server Error. This is a problem with the server that you cannot fix.'
+  })
+  @ApiUnauthorizedResponse({
+    type: ErrorResponseDto,
+    description: 'Unauthorized. Due to missing or invalid authentication.'
+  })
   @Get("request-download/:compressionId")
   async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession) {
     const url = await this.compressorService.requestS3Download(session.user.id, compressionId)
-    return url
+    return {
+      url: url
+    }
   }
 }
 

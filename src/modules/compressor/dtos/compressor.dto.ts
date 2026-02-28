@@ -16,3 +16,8 @@ export class RequestS3UploadDto {
     @IsMimeType()
     mimetype: string
 }
+
+export class CompressorUrlResponseDto {
+    @ApiProperty()
+    url: string
+}
