@@ -54,9 +54,10 @@ export class CompressorController {
   })
   @Get("request-upload")
   async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession): Promise<CompressorUrlResponseDto> {
-    const url = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
+    const { url, compressionId } = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
     return {
-      url: url
+      url: url,
+      compressionId: compressionId
     }
   }
 

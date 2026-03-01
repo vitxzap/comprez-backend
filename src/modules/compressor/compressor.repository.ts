@@ -1,10 +1,5 @@
-import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
-import { InjectQueue } from '@nestjs/bullmq';
-import { FeatureFlagService } from '../flagsmith/flagsmith.service';
-import { Flags } from '../flagsmith/types';
-import { RequestS3UploadDto } from "./dtos/compressor.dto"
-import { S3Service } from 'src/aws/s3/aws.s3.service';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 
 
@@ -14,8 +9,8 @@ export class CompressorRepository implements CompressorContract {
     private prismaService: PrismaService
   ) { }
 
-  async storeCompression(s3Key: string, userId: string): Promise<void> {
-    await this.prismaService.compression.create({
+  async storeCompression(s3Key: string, userId: string): Promise<string> {
+    const compression = await this.prismaService.compression.create({
       data: {
         s3Key: s3Key,
         userId: userId,
@@ -26,9 +21,10 @@ export class CompressorRepository implements CompressorContract {
         preset: "low",
       }
     })
+    return compression.id;
   }
 
-  async getDestinationById(userId: string, compressionId: string) {
+  async getS3KeyById(userId: string, compressionId: string) {
     const key = await this.prismaService.compression.findUnique({
       where: {
         id: compressionId,

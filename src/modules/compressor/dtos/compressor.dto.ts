@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsMimeType, IsString } from "class-validator"
+import { IsMimeType, IsOptional, IsString, IsUrl } from "class-validator"
 
 export class RequestS3UploadDto {
     @ApiProperty({
@@ -19,5 +19,11 @@ export class RequestS3UploadDto {
 
 export class CompressorUrlResponseDto {
     @ApiProperty()
+    @IsUrl()
     url: string
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    compressionId?: string
 }
