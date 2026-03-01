@@ -25,7 +25,7 @@ export class S3Service {
     }
 
     generateS3Key(userId: string, filename: string) {
-        return `/${this.uploadFolder}/${userId}/${filename}`
+        return `${this.uploadFolder}/${userId}/${filename}`
     }
 
     //Creates a new presigned url to download the file from the bucket and returns it
