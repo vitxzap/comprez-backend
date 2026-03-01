@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Query,
 } from '@nestjs/common';
 import { CompressorService } from './compressor.service';
 import {
@@ -16,12 +17,14 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
+  ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CompressorUrlResponseDto, RequestS3UploadDto } from "./dtos/compressor.dto"
-import { ErrorResponseDto } from 'src/utils/dtos/response.dto';
+import { CompressionsResponseDto, RequestS3UploadDto, S3UploadResponseDto, S3UrlResponseDto } from "./dtos/compressor.dto"
 @ApiCookieAuth()
+
 @Controller('compressor')
+@ApiTags("Compressor")
 export class CompressorController {
   constructor(
     private readonly compressorService: CompressorService,
@@ -35,59 +38,45 @@ export class CompressorController {
     description: "Requests a presigned url to upload the file."
   })
   @ApiOkResponse({
-    description: "Ok. URL Created.",
-    type: CompressorUrlResponseDto
-  })
-  @ApiBadRequestResponse({
-    type: ErrorResponseDto,
-    description:
-      'Bad request. Usually due to missing parameters, or invalid parameters.'
-  })
-  @ApiInternalServerErrorResponse({
-    type: ErrorResponseDto,
-    description:
-      'Internal Server Error. This is a problem with the server that you cannot fix.'
-  })
-  @ApiUnauthorizedResponse({
-    type: ErrorResponseDto,
-    description: 'Unauthorized. Due to missing or invalid authentication.'
+    description: "URL Created.",
+    type: S3UploadResponseDto
   })
   @Get("request-upload")
-  async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession): Promise<CompressorUrlResponseDto> {
-    const { url, compressionId } = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
+  async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession): Promise<S3UploadResponseDto> {
+    const { url, id } = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
     return {
       url: url,
-      compressionId: compressionId
+      id: id
     }
   }
 
   @ApiOperation({
-    description: "Requests a presigned url to download the specified file",
+    description: "Requests a presigned url to download the specified file.",
   })
   @ApiOkResponse({
-    type: CompressorUrlResponseDto,
-    description: "Ok. Url created."
-  })
-  @ApiBadRequestResponse({
-    type: ErrorResponseDto,
-    description:
-      'Bad request. Usually due to missing parameters, or invalid parameters.'
-  })
-  @ApiInternalServerErrorResponse({
-    type: ErrorResponseDto,
-    description:
-      'Internal Server Error. This is a problem with the server that you cannot fix.'
-  })
-  @ApiUnauthorizedResponse({
-    type: ErrorResponseDto,
-    description: 'Unauthorized. Due to missing or invalid authentication.'
+    type: S3UrlResponseDto,
+    description: "Url created."
   })
   @Get("request-download/:compressionId")
-  async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession): Promise<CompressorUrlResponseDto> {
-    const url = await this.compressorService.requestS3Download(session.user.id, compressionId)
+  async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession): Promise<S3UrlResponseDto> {
+    const { url } = await this.compressorService.requestS3Download(session.user.id, compressionId)
     return {
       url: url
     }
+  }
+
+
+  @ApiOperation({
+    description: "Get all compressions from your user."
+  })
+  @ApiOkResponse({
+    type: CompressionsResponseDto,
+    description: "Compressions returned."
+  })
+  @Get("compressions")
+  async getUserCompressions(@Session() session: UserSession) {
+    const compressions = await this.compressorService.getUserCompressions(session.user.id)
+    return compressions
   }
 }
 

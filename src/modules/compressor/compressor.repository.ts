@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { PrismaService } from 'src/database/prisma/prisma.service';
+import { UserCompressions } from './types/compressor.types';
 
 
 @Injectable()
@@ -35,5 +36,20 @@ export class CompressorRepository implements CompressorContract {
       throw new NotFoundException()
     }
     return key.s3Key
+  }
+
+  async getUserCompressionsById(userId: string): Promise<UserCompressions[]> {
+    const userCompressions: UserCompressions[] = await this.prismaService.compression.findMany({
+      where: {
+        userId: userId
+      },
+      select: {
+        //As long as this variable is typed, all fields that isnt especified by the type will be ignored and not included
+        id: true,
+        originalName: true,
+        status: true, 
+      }
+    })
+    return userCompressions;
   }
 }

@@ -7,7 +7,7 @@ export interface StandardResponse<T> {
     success: boolean,
     timestamp: string
 }
-
+//Intercepts all responses to shape it against the StandardResponse interface
 @Injectable()
 export class TransformResponseInterceptor<T> implements NestInterceptor<T, StandardResponse<T>> {
     intercept(context: ExecutionContext, next: CallHandler<T>): Observable<StandardResponse<T>> | Promise<Observable<StandardResponse<T>>> {

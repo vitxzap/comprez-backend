@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsMimeType, IsOptional, IsString, IsUrl } from "class-validator"
+import { IsMimeType, IsString } from "class-validator"
+import { Status } from "generated/prisma/enums";
 
 export class RequestS3UploadDto {
     @ApiProperty({
@@ -17,13 +18,34 @@ export class RequestS3UploadDto {
     mimetype: string
 }
 
-export class CompressorUrlResponseDto {
-    @ApiProperty()
-    @IsUrl()
+export class S3UrlResponseDto {
+    @ApiProperty({
+        description: "The generated bucket url."
+    })
     url: string
+}
 
-    @ApiProperty()
-    @IsString()
-    @IsOptional()
-    compressionId?: string
+export class S3UploadResponseDto extends S3UrlResponseDto {
+    @ApiProperty({
+        description: "The compression id."
+    })
+    id: string
+}
+
+export class CompressionsResponseDto {
+    @ApiProperty({
+        description: "File original name."
+    })
+    originalName: string
+
+    @ApiProperty({
+        description: "The compression id."
+    })
+    id: string
+
+    @ApiProperty({
+        enum: Status,
+        description: "The current status of the compression."
+    })
+    status: Status
 }
