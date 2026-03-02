@@ -4,7 +4,7 @@ import { CompressorContract } from './compressor.contract';
 import { CompressorRepository } from './compressor.repository';
 import { CompressorController } from './compressor.controller';
 import { PrismaModule } from 'src/database/prisma/prisma.module';
-import { FeatureFlagModule } from '../flagsmith/flagsmith.module';
+import { FeatureFlagModule } from '../featureFlag/feature-flag.module';
 import { S3Module } from 'src/aws/s3/aws.s3.module';
 
 @Module({

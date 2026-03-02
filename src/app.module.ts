@@ -11,6 +11,8 @@ import { SqsModule } from "@ssut/nestjs-sqs"
 import { SqsConfigService } from './aws/config/sqs.config.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponseInterceptor } from './interceptors/response.interceptor';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CacheConfigService } from './database/cache/cache.config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -20,6 +22,10 @@ import { TransformResponseInterceptor } from './interceptors/response.intercepto
     }),
     SqsModule.registerAsync({
       useClass: SqsConfigService
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useClass: CacheConfigService
     }),
     AuthModule.forRootAsync({
       isGlobal: true,

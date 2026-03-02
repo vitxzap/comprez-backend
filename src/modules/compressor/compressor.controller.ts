@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CompressorService } from './compressor.service';
 import {
@@ -11,22 +12,24 @@ import {
   type UserSession
 } from '@thallesp/nestjs-better-auth';
 import {
-  ApiBadRequestResponse,
   ApiCookieAuth,
-  ApiInternalServerErrorResponse,
+  ApiExcludeEndpoint,
   ApiOkResponse,
   ApiOperation,
-  ApiResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { CompressionsResponseDto, RequestS3UploadDto, S3UploadResponseDto, S3UrlResponseDto } from "./dtos/compressor.dto"
-@ApiCookieAuth()
+import { MimetypeGuard } from 'src/guards/mimetype.guard';
+import { FlagMetadata } from 'src/modules/featureFlag/flags.decorator';
+import { FEATURE_FLAGS } from '../featureFlag/types/types';
+import { FeatureFlagService } from '../featureFlag/feature-flag.service';
 
+@ApiCookieAuth()
 @Controller('compressor')
 @ApiTags("Compressor")
 export class CompressorController {
   constructor(
+    private featureFlag: FeatureFlagService,
     private readonly compressorService: CompressorService,
   ) { }
 
@@ -41,6 +44,9 @@ export class CompressorController {
     description: "URL Created.",
     type: S3UploadResponseDto
   })
+  //Defines which array of valid mimetypes will use 
+  @FlagMetadata(FEATURE_FLAGS.COMPRESSOR_ALLOWED_FILE_TYPES)
+  @UseGuards(MimetypeGuard)
   @Get("request-upload")
   async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession): Promise<S3UploadResponseDto> {
     const { url, id } = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
@@ -65,6 +71,10 @@ export class CompressorController {
     }
   }
 
+  @Get("cachedFlags")
+  async getFlags() {
+    return await this.featureFlag.getCachedFlags()
+  }
 
   @ApiOperation({
     description: "Get all compressions from your user."

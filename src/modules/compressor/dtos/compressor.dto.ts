@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsMimeType, IsString } from "class-validator"
+import { IsIn, IsMimeType, IsString } from "class-validator"
 import { Status } from "generated/prisma/enums";
 
-export class RequestS3UploadDto {
+export class RequestS3UploadDto { 
     @ApiProperty({
         description: "The name that will be used to save the file",
         example: "my-new-video"

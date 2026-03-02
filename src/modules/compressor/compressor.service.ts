@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { RequestS3UploadDto, S3UploadResponseDto, S3UrlResponseDto } from "./dtos/compressor.dto"
-import { FeatureFlagService } from '../flagsmith/flagsmith.service';
-import { Flags } from '../flagsmith/types/types';
+import { FeatureFlagService } from '../featureFlag/feature-flag.service';
+import { FEATURE_FLAGS } from '../featureFlag/types/types';
 import { S3Service } from 'src/aws/s3/aws.s3.service';
 import { UserCompressions } from './types/compressor.types';
 @Injectable()
@@ -13,7 +13,7 @@ export class CompressorService {
   ) { }
   private logger = new Logger(CompressorService.name)
   async requestS3Upload(params: RequestS3UploadDto, userId: string): Promise<S3UploadResponseDto> {
-    if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
+    if (await this.featureFlag.isCachedFlagEnabled(FEATURE_FLAGS.ENABLE_S3_FEATURES)) {
       //Generates the key (path) for the s3
       const key = this.s3Service.generateS3Key(userId, params.filename);
 
@@ -36,7 +36,7 @@ export class CompressorService {
   }
 
   async requestS3Download(userId: string, compressionId: string): Promise<S3UrlResponseDto> {
-    if (await this.featureFlag.isFlagEnabled(Flags.ENABLE_S3_FEATURES)) {
+    if (await this.featureFlag.isCachedFlagEnabled(FEATURE_FLAGS.ENABLE_S3_FEATURES)) {
       //Generates the key (path) for the s3
       const key = await this.compressorContract.getS3KeyById(userId, compressionId);
       const url = await this.s3Service.requestS3Download(key);

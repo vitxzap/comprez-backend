@@ -32,7 +32,7 @@ model Compression {
   preset         String
   compressedSize Int
   originalSize   Int
-  status        Status @default(CREATED)
+  status          Status @default(PENDING)
   s3Key          String
   createdAt      DateTime @default(now())
   userId         String
