@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { RequestS3UploadDto, S3UploadResponseDto, S3UrlResponseDto } from "./dtos/compressor.dto"
 import { FeatureFlagService } from '../featureFlag/feature-flag.service';
-import { FEATURE_FLAGS } from '../featureFlag/types/types';
+import { FEATURE_FLAGS } from '../featureFlag/types/feature-flag.types';
 import { S3Service } from 'src/aws/s3/aws.s3.service';
 import { UserCompressions } from './types/compressor.types';
 @Injectable()

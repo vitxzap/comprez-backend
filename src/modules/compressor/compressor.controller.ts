@@ -20,8 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { CompressionsResponseDto, RequestS3UploadDto, S3UploadResponseDto, S3UrlResponseDto } from "./dtos/compressor.dto"
 import { MimetypeGuard } from 'src/guards/mimetype.guard';
-import { FlagMetadata } from 'src/modules/featureFlag/flags.decorator';
-import { FEATURE_FLAGS } from '../featureFlag/types/types';
+import { FlagMetadata } from 'src/modules/featureFlag/feature-flag.decorator';
+import { FEATURE_FLAGS } from '../featureFlag/types/feature-flag.types';
 import { FeatureFlagService } from '../featureFlag/feature-flag.service';
 
 @ApiCookieAuth()

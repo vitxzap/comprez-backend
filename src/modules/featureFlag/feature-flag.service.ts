@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { TypedEnv } from "config/env";
 import { Flags, Flagsmith } from "flagsmith-nodejs";
-import { CACHED_FLAGS, FEATURE_FLAGS } from "./types/types";
+import { CACHED_FLAGS, FEATURE_FLAGS } from "./types/feature-flag.types";
 import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager"
 import { ConfigService } from "@nestjs/config";
 

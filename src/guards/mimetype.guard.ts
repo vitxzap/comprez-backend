@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { FlagMetadata } from "src/modules/featureFlag/flags.decorator";
+import { FlagMetadata } from "src/modules/featureFlag/feature-flag.decorator";
 import { FeatureFlagService } from "src/modules/featureFlag/feature-flag.service";
 
 interface RequestMimetype {
