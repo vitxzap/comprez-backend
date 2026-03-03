@@ -4,6 +4,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { ConfigService } from "@nestjs/config";
 import { TypedEnv } from "config/env";
 import { S3_CLIENT } from "./aws.s3.provider";
+import { GenerateS3Key } from "./types/s3.types";
 @Injectable()
 export class S3Service {
     constructor(
@@ -24,8 +25,8 @@ export class S3Service {
         return url;
     }
 
-    generateS3Key(userId: string, filename: string) {
-        return `${this.uploadFolder}/${userId}/${filename}`
+    generateS3Key(payload: GenerateS3Key) {
+        return `${this.uploadFolder}/${payload.userId}/${payload.compressionId}/${payload.filename}`
     }
 
     //Creates a new presigned url to download the file from the bucket and returns it

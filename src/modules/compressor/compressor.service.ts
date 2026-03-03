@@ -14,21 +14,25 @@ export class CompressorService {
   private logger = new Logger(CompressorService.name)
   async requestS3Upload(params: RequestS3UploadDto, userId: string): Promise<S3UploadResponseDto> {
     if (await this.featureFlag.isCachedFlagEnabled(FEATURE_FLAGS.ENABLE_S3_FEATURES)) {
-      //Generates the key (path) for the s3
-      const key = this.s3Service.generateS3Key(userId, params.filename);
-
-      const url = await this.s3Service.requestS3Upload(key, params.mimetype);
-      this.logger.debug("S3 upload url generated");
-      const id = await this.compressorContract.storeCompression({
+      const compressionId = await this.compressorContract.storeCompression({
         filename: params.filename,
         mimetype: params.mimetype,
-        s3Key: key,
         userId: userId
       });
-      this.logger.debug("Compression data stored into database");
+      this.logger.debug("Compression registry stored into database");
+
+      //Generates the key (path) for the s3
+      const key = this.s3Service.generateS3Key({
+        compressionId: compressionId,
+        filename: params.filename,
+        userId: userId
+      });
+      const url = await this.s3Service.requestS3Upload(key, params.mimetype);
+      this.logger.debug(`S3 upload url generated: ${key}`);
+
       return {
         url: url,
-        id: id,
+        id: compressionId,
       };
 
     }

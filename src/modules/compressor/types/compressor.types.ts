@@ -6,5 +6,4 @@ export type UserCompressions = Pick<Compression, "id" | "originalName" | "status
 
 export interface StoreCompressions extends RequestS3UploadDto {
     userId: string,
-    s3Key: string,
 }

@@ -13,7 +13,6 @@ export class CompressorRepository implements CompressorContract {
   async storeCompression(payload: StoreCompressions): Promise<string> {
     const compression = await this.prismaService.compression.create({
       data: {
-        s3Key: payload.s3Key,
         userId: payload.userId,
         ext: payload.mimetype,
         originalName: payload.filename,
