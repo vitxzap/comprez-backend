@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CompressorContract } from './compressor.contract';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { UserCompressions } from './types/compressor.types';
+import { StoreCompressions, UserCompressions } from './types/compressor.types';
 
 
 @Injectable()
@@ -10,16 +10,13 @@ export class CompressorRepository implements CompressorContract {
     private prismaService: PrismaService
   ) { }
 
-  async storeCompression(s3Key: string, userId: string): Promise<string> {
+  async storeCompression(payload: StoreCompressions): Promise<string> {
     const compression = await this.prismaService.compression.create({
       data: {
-        s3Key: s3Key,
-        userId: userId,
-        compressedSize: 1,
-        ext: ".mp4",
-        originalName: "teste",
-        originalSize: 2,
-        preset: "low",
+        s3Key: payload.s3Key,
+        userId: payload.userId,
+        ext: payload.mimetype,
+        originalName: payload.filename,
       }
     })
     return compression.id;
@@ -30,12 +27,15 @@ export class CompressorRepository implements CompressorContract {
       where: {
         id: compressionId,
         userId: userId
+      },
+      select: {
+        s3Key: true
       }
     })
-    if (!key) {
-      throw new NotFoundException()
+    if (key?.s3Key) {
+      return key.s3Key
     }
-    return key.s3Key
+    return "";
   }
 
   async getUserCompressionsById(userId: string): Promise<UserCompressions[]> {
@@ -47,7 +47,7 @@ export class CompressorRepository implements CompressorContract {
         //As long as this variable is typed, all fields that isnt especified by the type will be ignored and not included
         id: true,
         originalName: true,
-        status: true, 
+        status: true,
       }
     })
     return userCompressions;

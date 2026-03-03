@@ -19,7 +19,12 @@ export class CompressorService {
 
       const url = await this.s3Service.requestS3Upload(key, params.mimetype);
       this.logger.debug("S3 upload url generated");
-      const id = await this.compressorContract.storeCompression(key, userId);
+      const id = await this.compressorContract.storeCompression({
+        filename: params.filename,
+        mimetype: params.mimetype,
+        s3Key: key,
+        userId: userId
+      });
       this.logger.debug("Compression data stored into database");
       return {
         url: url,
@@ -44,7 +49,6 @@ export class CompressorService {
       return {
         url: url
       };
-
     }
     else {
 
