@@ -4,7 +4,7 @@ import { S3ClientProvider } from "./aws.s3.provider";
 
 
 @Module({
-    providers: [S3Service, S3ClientProvider],
+    providers: [S3Service],
     exports: [S3Service]
 })
 export class S3Module { }
