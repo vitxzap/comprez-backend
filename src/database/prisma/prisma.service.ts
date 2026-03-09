@@ -16,7 +16,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       database: configService.getOrThrow("POSTGRES_DB"),
       //AWS RDS needs this to create a connection without any SSL errors
       ssl: {
-        rejectUnauthorized: false,
+        rejectUnauthorized: true,
+        requestCert: true, 
         ca: readFileSync("./certs/global-bundle.pem").toString()
       }
     });
