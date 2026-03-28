@@ -5,7 +5,7 @@ import { Injectable } from "@nestjs/common";
 export class CacheConfigService implements CacheOptionsFactory {
     createCacheOptions(): CacheOptions<Record<string, any>> | Promise<CacheOptions<Record<string, any>>> {
         return {
-            ttl: 172800000 //2 Days
+            ttl: 30 * 60 * 100 //30 min
         }
     }
 }
