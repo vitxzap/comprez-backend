@@ -20,6 +20,7 @@ export const AuthConfigService = {
       database: prismaAdapter(prismaService, {
         provider: 'postgresql'
       }),
+      trustedOrigins: ["http://localhost:3000"],
       basePath: `${configService.getOrThrow("GLOBAL_PREFIX")}/auth`
     });
   }

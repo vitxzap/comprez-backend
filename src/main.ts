@@ -6,11 +6,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import helmet from 'helmet';
 import { ErrorResponseDto } from './utils/dtos/response.dto';
+import { auth } from './auth/auth';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false
   });
-  app.setGlobalPrefix(env.GLOBAL_PREFIX);
+  if (process.env.GLOBAL_PREFIX) {
+    app.setGlobalPrefix(process.env.GLOBAL_PREFIX);
+  }
   //Swagger + Scalar set-up
   const config = new DocumentBuilder()
     .setTitle('Comprez')
@@ -54,23 +57,22 @@ async function bootstrap() {
     .addCookieAuth('better-auth.session_token')
     .build();
   const documentFactory = SwaggerModule.createDocument(app, config);
-
+  const openAPISchema = await auth.api.generateOpenAPISchema()
   //using scalar to document the api
   app.use(
-    '/v1/docs',
+    `/${process.env.GLOBAL_PREFIX}/reference`,
     apiReference({
       sources: [
         {
-          url: '/v1/docs',
           title: 'Comprez',
           slug: 'comprez',
           content: documentFactory,
           default: true
         },
         {
-          url: '/v1/auth/open-api/generate-schema',
           title: 'Auth',
-          slug: 'auth'
+          slug: 'auth',
+          content: openAPISchema
         }
       ],
       theme: 'kepler'

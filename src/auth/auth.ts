@@ -16,10 +16,9 @@ const prisma = new PrismaClient({
 export const auth = betterAuth({
   plugins: [
     anonymous(),
-    openAPI({
-      disableDefaultReference: true
-    })
+    openAPI({ disableDefaultReference: true })
   ],
+  basePath: `${process.env.GLOBAL_PREFIX}/auth`,
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, {
