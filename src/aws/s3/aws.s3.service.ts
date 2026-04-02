@@ -24,11 +24,15 @@ export class S3Service extends S3Client {
 
     //Creates a new Presigned url to upload the file to the bucket and returns it
     async requestS3Upload(key: string, contentType: string) {
-        const url = await getSignedUrl(this, new PutObjectCommand({
+        const command = new PutObjectCommand({
             Bucket: this.bucket,
             Key: key,
-            ContentType: contentType
-        }), { expiresIn: 3600 })
+            ContentType: contentType,
+        })
+        const url = await getSignedUrl(this, command, {
+            expiresIn: 90,
+            signableHeaders: new Set(["content-type"])
+        })
         return url;
     }
 

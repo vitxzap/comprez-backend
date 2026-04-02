@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -47,7 +48,7 @@ export class CompressorController {
   //Defines which array of valid mimetypes will use 
   @FlagMetadata(FEATURE_FLAGS.COMPRESSOR_ALLOWED_FILE_TYPES)
   @UseGuards(MimetypeGuard)
-  @Get("request-upload")
+  @Post("request-upload")
   async requestUpload(@Body() RequestS3UploadDto: RequestS3UploadDto, @Session() session: UserSession): Promise<S3UploadResponseDto> {
     const { url, id } = await this.compressorService.requestS3Upload(RequestS3UploadDto, session.user.id)
     return {
@@ -63,7 +64,7 @@ export class CompressorController {
     type: S3UrlResponseDto,
     description: "Url created."
   })
-  @Get("request-download/:compressionId")
+  @Post("request-download/:compressionId")
   async requestDownload(@Param("compressionId") compressionId: string, @Session() session: UserSession): Promise<S3UrlResponseDto> {
     const { url } = await this.compressorService.requestS3Download(session.user.id, compressionId)
     return {
