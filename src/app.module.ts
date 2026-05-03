@@ -7,7 +7,7 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { AUTH_CONFIG } from './auth/symbols';
 import { AuthConfigModule } from './auth/auth.config.module';
 import { BetterAuthOptions } from 'better-auth';
-import { SqsModule } from "@ssut/nestjs-sqs"
+import { SqsModule } from '@ssut/nestjs-sqs';
 import { SqsConfigService } from './aws/config/sqs.config.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponseInterceptor } from './interceptors/response.interceptor';
@@ -48,4 +48,4 @@ import { CacheConfigService } from './database/cache/cache.config.service';
     }
   ]
 })
-export class AppModule { }
+export class AppModule {}

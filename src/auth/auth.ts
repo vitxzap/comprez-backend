@@ -14,10 +14,7 @@ const prisma = new PrismaClient({
  * Make sure to *ALWAYS* have this updated with the AuthConfigService config options before running better-auth cli commands
  */
 export const auth = betterAuth({
-  plugins: [
-    anonymous(),
-    openAPI({ disableDefaultReference: true })
-  ],
+  plugins: [anonymous(), openAPI({ disableDefaultReference: true })],
   basePath: `${process.env.GLOBAL_PREFIX}/auth`,
   baseURL: process.env.BETTER_AUTH_URL,
   secret: process.env.BETTER_AUTH_SECRET,

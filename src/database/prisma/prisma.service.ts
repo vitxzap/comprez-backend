@@ -1,4 +1,9 @@
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { TypedEnv } from 'config/env';
@@ -7,18 +12,21 @@ import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+export class PrismaService
+  extends PrismaClient
+  implements OnModuleInit, OnModuleDestroy
+{
   constructor(private readonly configService: ConfigService<TypedEnv>) {
     const adapter = new PrismaPg({
-      host: configService.getOrThrow("POSTGRES_HOST"),
-      password: configService.getOrThrow("POSTGRES_PASSWORD"),
-      user: configService.getOrThrow("POSTGRES_USER"),
-      database: configService.getOrThrow("POSTGRES_DB"),
+      host: configService.getOrThrow('POSTGRES_HOST'),
+      password: configService.getOrThrow('POSTGRES_PASSWORD'),
+      user: configService.getOrThrow('POSTGRES_USER'),
+      database: configService.getOrThrow('POSTGRES_DB'),
       //AWS RDS needs this to create a connection without any SSL errors
       ssl: {
         rejectUnauthorized: true,
-        requestCert: true, 
-        ca: readFileSync("./certs/global-bundle.pem").toString()
+        requestCert: true,
+        ca: readFileSync('./certs/global-bundle.pem').toString()
       }
     });
     super({ adapter });
@@ -28,24 +36,22 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   // Methods used to health checks the database connection
   async onModuleInit() {
     try {
-      await this.$connect()
+      await this.$connect();
       await this.$queryRaw`SELECT 1`; // DB Health check
-      this.logger.debug("Database connected successfully")
-    }
-    catch (err: unknown) {
-      this.logger.error(`Failed to connect to database:`)
-      throw err
+      this.logger.debug('Database connected successfully');
+    } catch (err: unknown) {
+      this.logger.error(`Failed to connect to database:`);
+      throw err;
     }
   }
 
   //Destroys the database connection when the module is destroyed
   async onModuleDestroy() {
     try {
-      await this.$disconnect()
-      this.logger.debug("Database disconnected successfully")
-    }
-    catch (err: unknown) {
-      this.logger.error(`Unexpected disconnection error:`)
+      await this.$disconnect();
+      this.logger.debug('Database disconnected successfully');
+    } catch (err: unknown) {
+      this.logger.error(`Unexpected disconnection error:`);
       throw err;
     }
   }

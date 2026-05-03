@@ -40,8 +40,7 @@ async function bootstrap() {
     .addGlobalResponse({
       status: 401,
       type: ErrorResponseDto,
-      description:
-        'Unauthorized. Due to missing or invalid authentication.'
+      description: 'Unauthorized. Due to missing or invalid authentication.'
     })
 
     //Too Many Requests
@@ -53,11 +52,14 @@ async function bootstrap() {
     })
 
     //Compressor controller tag
-    .addTag("Compressor", "Endpoints that can help you to compress video files.")
+    .addTag(
+      'Compressor',
+      'Endpoints that can help you to compress video files.'
+    )
     .addCookieAuth('better-auth.session_token')
     .build();
   const documentFactory = SwaggerModule.createDocument(app, config);
-  const openAPISchema = await auth.api.generateOpenAPISchema()
+  const openAPISchema = await auth.api.generateOpenAPISchema();
   //using scalar to document the api
   app.use(
     `/${process.env.GLOBAL_PREFIX}/reference`,
@@ -86,7 +88,6 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
     credentials: true
   });
-
 
   await app.listen(env.PORT);
 }

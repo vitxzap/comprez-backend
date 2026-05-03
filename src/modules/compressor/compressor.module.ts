@@ -15,11 +15,7 @@ import { S3Module } from 'src/aws/s3/aws.s3.module';
       useClass: CompressorRepository
     }
   ],
-  imports: [
-    PrismaModule,
-    FeatureFlagModule,
-    S3Module,
-  ],
+  imports: [PrismaModule, FeatureFlagModule, S3Module],
   controllers: [CompressorController]
 })
-export class CompressorModule { }
+export class CompressorModule {}
